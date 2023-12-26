@@ -1,0 +1,78 @@
+﻿@{
+    Layout = "_Layout";
+}
+@using System.Data;
+@model DataTable
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h3>List of Station</h3>
+        <div>
+            <a type="button" class="btn btn-success btn-add">Add New Station</a>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Station Name</th>
+                        <th scope="col">Station Location</th>
+                        <th scope="auto">Description</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="myTable">
+
+                    @if (Model.Rows.Count <= 0)
+                    {
+                        <tr>
+                            <td class="col text-danger text-center">No records</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @if (Model.Rows.Count > 0)
+                        {
+                        <tbody id="myTable">
+                                @foreach (DataRow dataRow in Model.Rows)
+                                {
+                                <tr>
+                                    <td>@dataRow["StationName"].ToString()</td>
+                                    <td>@dataRow["location"].ToString() </td>
+                                    <td>@(dataRow["Description"] != null && !string.IsNullOrWhiteSpace(dataRow["Description"].ToString()) ? dataRow["Description"] : "NA")</td>
+                                    <td>
+                                        <a type="button" class="btn btn-danger">Delete</a>
+                                        <a type="button" class="btn btn-info">Edit</a>
+                                    </td>
+                                </tr>
+                                }
+                        </tbody>
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="form">
+            <label for="itemsPerPage" class="mr-2">Items per page:</label>
+            <select id="itemsPerPage" class="form-control" onchange="changeItemsPerPage(this.value)">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+            </select>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>
