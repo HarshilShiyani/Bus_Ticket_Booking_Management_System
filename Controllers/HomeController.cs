@@ -1,4 +1,5 @@
-﻿using Bus_Ticket_Booking_Management_System.Models;
+﻿using Bus_Ticket_Booking_Management_System.DAL;
+using Bus_Ticket_Booking_Management_System.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,6 +16,10 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
 
         public IActionResult Index()
         {
+            DAL_Count dAL_Count = new DAL_Count();
+            ViewBag.BusCount = dAL_Count.GetBusCount();
+            ViewBag.StationCount = dAL_Count.GetStationCount();
+            ViewBag.RouteCount = dAL_Count.GetRouteCount();
             return View();
         }
 

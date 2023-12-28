@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Bus_Ticket_Booking_Management_System.DAL;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
 using System.Data;
 using System.Data.Common;
@@ -13,38 +14,17 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
     {
         public static string ConnString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
             .GetConnectionString("connectionString");
-        public ActionResult Index(int page = 1)
+        public ActionResult StationList(int page = 1)
         {
-            int totalRows = GetTotalRowCount(); // Implement this method to get the total number of rows
-            int totalPages = (int)Math.Ceiling((double)totalRows / 7);
-
-            DataTable dataForPage = GetDataForPage(page);
-
+            DAL_Station dAL_Station = new DAL_Station();
+            int totalRows = dAL_Station.GetTotalRowCount();
+            int totalPages = (int)Math.Ceiling((double)totalRows / 10);
             ViewBag.TotalPages = totalPages;
             ViewBag.CurrentPage = page;
+            DataTable dt = dAL_Station.PR_AllStationList(page);
+            return View("StationList", dt);
+        }
 
-            return View("StationList",dataForPage);
-        }
-        private DataTable GetDataForPage(int page)
-        {
-            SqlDatabase sqlDatabase = new SqlDatabase(ConnString);
-            DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_SelectAll_Station");
-            sqlDatabase.AddInParameter(dbCommand, "@PageNumber", DbType.Int32, page);
-            sqlDatabase.AddInParameter(dbCommand, "@PageSize", DbType.Int32, 7);
-
-            using (IDataReader reader = sqlDatabase.ExecuteReader(dbCommand))
-            {
-                DataTable dataTable = new DataTable();
-                dataTable.Load(reader);
-                return dataTable;
-            }
-        }
-        private int GetTotalRowCount()
-        {
-            SqlDatabase sqlDatabase = new SqlDatabase(ConnString);
-            DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_Count_Station");
-            return Convert.ToInt32(sqlDatabase.ExecuteScalar(dbCommand));
-        }
     }
 }
 

@@ -3,21 +3,20 @@ using System.Data;
 
 namespace Bus_Ticket_Booking_Management_System.BAL
 {
-    public class BAL_Station
+    public class BAL_Buses
     {
-        public DataTable PR_AllStationList(int PageNumber)
+        public DataTable PR_AllBusesList()
         {
             try
             {
-                DAL_Station dAL_Station = new DAL_Station();
-                DataTable dt = dAL_Station.PR_AllStationList(PageNumber);
+                DAL_Buses dAL_Buses = new DAL_Buses();
+                DataTable dt=  dAL_Buses.PR_AllBusesList();
                 return dt;
             }
-            catch 
+            catch
             {
                 return null;
             }
         }
-
     }
 }

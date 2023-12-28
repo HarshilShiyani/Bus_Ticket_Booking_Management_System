@@ -3,7 +3,15 @@
 }
 @using System.Data;
 @model DataTable
-
+<div class="pagetitle">
+    <h1>Station</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+            <li class="breadcrumb-item active">Station</li>
+        </ol>
+    </nav>
+</div>
 <div class="card">
     <div class="card-header d-flex justify-content-between">
         <h3>List of Station</h3>
@@ -56,23 +64,44 @@
                 </tbody>
             </table>
         </div>
-        <div class="form">
-            <label for="itemsPerPage" class="mr-2">Items per page:</label>
-            <select id="itemsPerPage" class="form-control" onchange="changeItemsPerPage(this.value)">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-            </select>
+        <div class="row">
+            <div class="col">
+                <ul class="pagination justify-content-start">
+                    Showing @ViewBag.CurrentPage to @ViewBag.TotalPages of 10 entries
+                </ul>
+            </div>
+            <div class="col">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end">
+                        @if (ViewBag.CurrentPage != 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("StationList", new { page = @ViewBag.CurrentPage-1 })">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        }
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+
+                            <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("StationList", new { page = i })">@i</a>
+                            </li>
+                        }
+                        @if (ViewBag.TotalPages != ViewBag.CurrentPage)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("StationList", new { page = @ViewBag.CurrentPage+1 })">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                </nav>
+            </div>
         </div>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-end">
-                @for (int i = 1; i <= ViewBag.TotalPages; i++)
-                {
-                    <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
-                        <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
-                    </li>
-                }
-            </ul>
-        </nav>
+
+
     </div>
 </div>

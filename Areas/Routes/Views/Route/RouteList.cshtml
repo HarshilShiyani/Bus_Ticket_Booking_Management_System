@@ -1,0 +1,76 @@
+﻿<div class="pagetitle">
+    <h1>Routes</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+            <li class="breadcrumb-item active">Routes</li>
+        </ol>
+    </nav>
+</div>
+@for(int i = 1; i <= 5; i++)
+{
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <div class="container text-dark">
+                <div class="row">
+                    <div class="col">
+                        <div class="row ">
+
+                            <p class="fw-bold">Trip Code</p>
+
+                        </div>
+                        <div class="row">
+                            0645RJTDIUE1
+                        </div>
+                    </div>
+                    <div class="col">
+
+                        <div class="row">
+                            <p class="fw-bold ">Dept.Time</p>
+
+                        </div>
+                        <div class="row">
+                            <p>06:45</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <p class="fw-bold">Origin</p>
+                        </div>
+                        <div class="row">
+                            <p>Rajkot Busport</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <p class="fw-bold">Destination</p>
+                        </div>
+                        <div class="row">
+                            <p>DIU</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <p class="fw-bold">Duration</p>
+                        </div>
+                        <div class="row">
+                            <p>05:25</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <p class="fw-bold">Fare</p>
+                        </div>
+                        <div class="row">
+                            <p>₹174.00</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-sm">View Seat &nbsp;<span aria-hidden="true">&raquo;</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
