@@ -1,10 +1,8 @@
 ﻿using Bus_Ticket_Booking_Management_System.DAL;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
 using System.Data;
-using System.Data.Common;
-using System.Drawing.Printing;
-
+using Bus_Ticket_Booking_Management_System.Areas.Station.Models;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
 {
@@ -12,8 +10,7 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
     [Route("Station/[controller]/[action]")]
     public class StationController : Controller
     {
-        public static string ConnString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
-            .GetConnectionString("connectionString");
+        DAL_Station station = new DAL_Station();
         public ActionResult StationList(int page = 1)
         {
             DAL_Station dAL_Station = new DAL_Station();
@@ -24,8 +21,39 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
             DataTable dt = dAL_Station.PR_AllStationList(page);
             return View("StationList", dt);
         }
+        public ActionResult StationAddEdit(int? StationID)
+        {
+            if(StationID != null)
+            {
+                Stationmodel model = station.SelectStationByID(StationID);
+                return View(model);
+            }
+            else
+            {
+                return View();
+            }
+            
+        }
+        public ActionResult StationDelete(int StationID)
+        {
+            DAL_Station dAL_Station=new DAL_Station();
+            dAL_Station.DeleteStationByID(StationID);
+            return RedirectToAction("StationList");
+        }
+        public ActionResult StationSave(Stationmodel stationmodel,int? StationID)
+        {
+            if(StationID != null)
+            {
+                station.StationAddEdit(stationmodel,StationID);
+                ViewData["IsStationAdded"] = "Station Edited Succesfully";
 
+            }
+            else
+            {
+                station.StationAddEdit(stationmodel, StationID);
+                ViewData["IsStationAdded"] = "Station Added Succesfully";
+            }
+            return View("StationAddEdit");
+        }
     }
 }
-
-

@@ -12,11 +12,12 @@
         </ol>
     </nav>
 </div>
+
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        <h3>List of Station</h3>
+        <h3 class="text-dark">List of Station</h3>
         <div>
-            <a type="button" class="btn btn-success btn-add">Add New Station</a>
+            <a type="button" class="btn btn-success btn-add" asp-area="Station" asp-controller="Station" asp-action="StationAddEdit">Add New Station</a>
         </div>
     </div>
     <div class="card-body">
@@ -52,8 +53,8 @@
                                     <td>@dataRow["location"].ToString() </td>
                                     <td>@(dataRow["Description"] != null && !string.IsNullOrWhiteSpace(dataRow["Description"].ToString()) ? dataRow["Description"] : "NA")</td>
                                     <td>
-                                        <a type="button" class="btn btn-danger">Delete</a>
-                                        <a type="button" class="btn btn-info">Edit</a>
+                                        <a type="button" class="btn btn-danger" asp-route-StationID="@Convert.ToInt32(@dataRow["StationID"])" onclick="confirmDelete(@Convert.ToInt32(@dataRow["StationID"]))">Delete</a>
+                                        <a type="button" class="btn btn-info" asp-route-StationID="@Convert.ToInt32(@dataRow["StationID"])" asp-area="Station" asp-controller="Station" asp-action="StationAddEdit">Edit</a>
                                     </td>
                                 </tr>
                                 }
@@ -105,3 +106,46 @@
 
     </div>
 </div>
+@section Scripts {
+    <script>
+        function confirmDelete(parameter) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User confirmed, proceed with deletion
+                    $.ajax({
+                        url: "@Url.Action("StationDelete", "Station")" + "?&StationID=" + parameter,
+                        type: "POST",
+                        success: function (result) {
+                            // Use SweetAlert to show a success message
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "The Station has been deleted.",
+                                icon: "success",
+                            }).then(() => {
+                                // Redirect to the CityList action
+                                window.location.href = "@Url.Action("StationList", "Station")";
+                            });
+                        },
+                        error: function () {
+                            // Use SweetAlert to show an error message
+                            Swal.fire({
+                                title: "Error",
+                                text: "An error occurred while deleting the Station.",
+                                icon: "error",
+                            });
+                        },
+                    });
+                }
+            });
+        }
+    </script>
+}

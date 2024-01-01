@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Bus_Ticket_Booking_Management_System.DAL;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace Bus_Ticket_Booking_Management_System.Areas.Routes.Controllers
 {
@@ -9,7 +11,9 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Routes.Controllers
     {
         public IActionResult RouteList()
         {
-            return View();
+            DAL_Route dAL_Route = new DAL_Route();
+            DataTable dt = dAL_Route.GelAllRoute();
+            return View("RouteList",dt);
         }
     }
 }

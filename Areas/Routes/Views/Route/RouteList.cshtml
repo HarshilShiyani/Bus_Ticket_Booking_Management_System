@@ -1,4 +1,9 @@
-﻿<div class="pagetitle">
+﻿@{
+    Layout = "_Layout";
+}
+@using System.Data;
+@model DataTable
+<div class="pagetitle">
     <h1>Routes</h1>
     <nav>
         <ol class="breadcrumb">
@@ -7,70 +12,76 @@
         </ol>
     </nav>
 </div>
-@for(int i = 1; i <= 5; i++)
-{
-    <div class="card">
-        <div class="card-header d-flex justify-content-between">
-            <div class="container text-dark">
-                <div class="row">
-                    <div class="col">
-                        <div class="row ">
 
-                            <p class="fw-bold">Trip Code</p>
-
-                        </div>
-                        <div class="row">
-                            0645RJTDIUE1
-                        </div>
-                    </div>
-                    <div class="col">
-
-                        <div class="row">
-                            <p class="fw-bold ">Dept.Time</p>
-
-                        </div>
-                        <div class="row">
-                            <p>06:45</p>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <p class="fw-bold">Origin</p>
-                        </div>
-                        <div class="row">
-                            <p>Rajkot Busport</p>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <p class="fw-bold">Destination</p>
-                        </div>
-                        <div class="row">
-                            <p>DIU</p>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <p class="fw-bold">Duration</p>
-                        </div>
-                        <div class="row">
-                            <p>05:25</p>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row">
-                            <p class="fw-bold">Fare</p>
-                        </div>
-                        <div class="row">
-                            <p>₹174.00</p>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <button type="button" class="btn btn-primary btn-sm">View Seat &nbsp;<span aria-hidden="true">&raquo;</span></button>
-                    </div>
-                </div>
-            </div>
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h3>List of Route</h3>
+        <div>
+            <a type="button" class="btn btn-success btn-add">Add New Route</a>
         </div>
     </div>
-}
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Route Name</th>
+                        <th scope="col">Time</th>
+                        <th scope="auto">Source</th>
+                        <th scope="col">Destination</th>
+                        <th scope="col">Starting Date</th>
+                        <th scope="col">Valid Till</th>
+
+                    </tr>
+                </thead>
+                <tbody id="myTable">
+
+                    @if (Model.Rows.Count <= 0)
+                    {
+                        <tr>
+                            <td class="col text-danger text-center">No records</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @if (Model.Rows.Count > 0)
+                        {
+                        <tbody id="myTable">
+                                @foreach (DataRow dataRow in Model.Rows)
+                                {
+                                <tr>
+                                    <td>@dataRow["RouteName"].ToString()</td>
+                                    <td>
+                                         @dataRow["starting_time"].ToString()
+                                    </td>
+                                    <td>@dataRow["Source"].ToString()</td>
+                                    <td>@dataRow["Destination"].ToString() </td>
+                                    <td>
+                                            @String.Format("{0:dd MMM yyyy}", dataRow["Starting_date"])
+                                    </td>
+                                    <td>
+                                            @String.Format("{0:dd MMM yyyy}", dataRow["Ending_date"])
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-sm">View Detail</button>
+
+                                    </td>
+                                    <td>
+                                        <a type="button" class="btn btn-danger">Delete</a>
+                                        <a type="button" class="btn btn-info">Edit</a>
+                                    </td>
+                                </tr>
+                                }
+                        </tbody>
+                        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 
