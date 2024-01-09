@@ -12,11 +12,15 @@
     <Folder Include="Areas\Routes\Data\" />
     <Folder Include="Areas\Routes\Models\" />
     <Folder Include="Areas\Station\Data\" />
+    <Folder Include="Areas\Ticket\Data\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="EnterpriseLibrary.Data" Version="6.0.1304" />
     <PackageReference Include="EnterpriseLibrary.Data.NetCore" Version="6.3.2" />
+    <PackageReference Include="jQuery" Version="3.7.1" />
+    <PackageReference Include="jQuery.Validation" Version="1.19.5" />
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Validation" Version="4.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />

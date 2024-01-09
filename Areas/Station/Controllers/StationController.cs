@@ -11,6 +11,8 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
     public class StationController : Controller
     {
         DAL_Station station = new DAL_Station();
+
+        #region StationList
         public ActionResult StationList(int page = 1)
         {
             DAL_Station dAL_Station = new DAL_Station();
@@ -21,9 +23,13 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
             DataTable dt = dAL_Station.PR_AllStationList(page);
             return View("StationList", dt);
         }
+
+        #endregion
+
+        #region StationAddEdit
         public ActionResult StationAddEdit(int? StationID)
         {
-            if(StationID != null)
+            if (StationID != null)
             {
                 Stationmodel model = station.SelectStationByID(StationID);
                 return View(model);
@@ -32,19 +38,27 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
             {
                 return View();
             }
-            
+
         }
+
+        #endregion
+
+        #region StationDelete
         public ActionResult StationDelete(int StationID)
         {
-            DAL_Station dAL_Station=new DAL_Station();
+            DAL_Station dAL_Station = new DAL_Station();
             dAL_Station.DeleteStationByID(StationID);
             return RedirectToAction("StationList");
         }
-        public ActionResult StationSave(Stationmodel stationmodel,int? StationID)
+
+        #endregion
+
+        #region StationSave
+        public ActionResult StationSave(Stationmodel stationmodel, int? StationID)
         {
-            if(StationID != null)
+            if (StationID != null)
             {
-                station.StationAddEdit(stationmodel,StationID);
+                station.StationAddEdit(stationmodel, StationID);
                 ViewData["IsStationAdded"] = "Station Edited Succesfully";
 
             }
@@ -55,5 +69,7 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
             }
             return View("StationAddEdit");
         }
+
+        #endregion
     }
 }

@@ -20,10 +20,8 @@
                 <thead>
                     <tr>
                         <th scope="col">Bus Type</th>
-                        <th scope="col">Seat</th>
-                        <th scope="col">With AC</th>
-                        <th scope="col">Sleeper</th>
-                        <th scope="col">Image</th>
+                        <th scope="col">Capacity</th>
+                        <th scope="col">Description</th>
 
                         <th scope="col">Action</th>
 
@@ -42,28 +40,9 @@
                         @foreach (DataRow dataRow in Model.Rows)
                         {
                             <tr>
-                                <td>@dataRow["bus_type"].ToString().ToUpper()</td>
-                                <td>@dataRow["bus_seat"]</td>
-                                @if (Convert.ToInt32(@dataRow["bus_is_ac"]) == 1)
-                                {
-                                    <td>Yes</td>
-                                }
-                                else
-                                {
-                                    <td>No</td>
-                                }
-                                @if (Convert.ToInt32(@dataRow["bus_is_sleeper"]) == 1)
-                                {
-                                    <td>Sleeper</td>
-                                }
-                                else
-                                {
-                                    <td>Seater</td>
-                                }
-                                <td>
-                                    <img src="@dataRow["bus_image"]" alt="Bus Image" style="width: 100px;" />
-                                </td>
-
+                                <td>@dataRow["TypeName"]</td>
+                                <td>@dataRow["Capacity"]</td>
+                                <td>@(dataRow["Description"] != null && !string.IsNullOrWhiteSpace(dataRow["Description"].ToString()) ? dataRow["Description"] : "--")</td>
                                 <td>
                                     <a type="button" class="btn btn-danger">Delete</a>
                                     <a type="button" class="btn btn-info">edit</a>

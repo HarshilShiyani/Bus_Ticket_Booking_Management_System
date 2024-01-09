@@ -13,4 +13,13 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Models
         public string? Description { get; set; }
     }
 
+    public class StationDDL
+    {
+        public int SourceID { get; set; }
+        public int DestinationID { get; set; }
+
+        public string? StationName { get; set; }
+
+    }
+
 }

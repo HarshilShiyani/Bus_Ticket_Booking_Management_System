@@ -19,23 +19,23 @@
 
                 <!-- Bus Card -->
                 <div class="col-xxl-4 col-md-6">
+                    <a asp-area="Bus" asp-controller="Bus" asp-action="BusList">
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Buses</h5>
 
-                    <div class="card info-card sales-card">
-                        <div class="card-body">
-                            <h5 class="card-title">Buses</h5>
-
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-bus-front"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <h6>@ViewBag.BusCount</h6>
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-bus-front"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>@ViewBag.BusCount</h6>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
-
-                    </div>
-
+                    </a>
                 </div>
 
                 <!-- End Bus Card -->
@@ -59,21 +59,23 @@
                 </div>
 
                 <div class="col-xxl-4 col-md-6">
-                    <div class="card info-card sales-card">
-                        <div class="card-body">
-                            <h5 class="card-title">Routes</h5>
+                    <a asp-area="Routes" asp-controller="Route" asp-action="RouteList">
 
-                            <div class="d-flex align-items-center">
-                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-arrow-bar-up"></i>
-                                </div>
-                                <div class="ps-3">
-                                    <h6>@ViewBag.RouteCount</h6>
+                        <div class="card info-card sales-card">
+                            <div class="card-body">
+                                <h5 class="card-title">Routes</h5>
+
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-arrow-bar-up"></i>
+                                    </div>
+                                    <div class="ps-3">
+                                        <h6>@ViewBag.RouteCount</h6>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                    </div>
+                    </a>
                 </div><!-- End Sales Card -->
 
             </div>

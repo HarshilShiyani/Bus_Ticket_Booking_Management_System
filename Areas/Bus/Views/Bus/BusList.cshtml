@@ -4,10 +4,9 @@
 @using System.Data;
 @model DataTable
 
-
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        <h3>Bus Type Of List</h3>
+        <h3>Bus List</h3>
         <div>
             <a type="button" class="btn btn-success btn-add">Add New Bus</a>
         </div>
@@ -21,13 +20,9 @@
                     <tr>
                         <th scope="col">Bus Number</th>
                         <th scope="col">Bus Type</th>
-                        <th scope="col">Seat</th>
-                        <th scope="col">With AC</th>
-                        <th scope="col">Sleeper</th>
-                        <th scope="col">Image</th>
-
+                        <th scope="col">Manufacturer</th>
+                        <th scope="col">ModelNo</th>
                         <th scope="col">Action</th>
-
                     </tr>
                 </thead>
                 <tbody id="myTable">
@@ -43,28 +38,11 @@
                         @foreach (DataRow dataRow in Model.Rows)
                         {
                             <tr>
-                                <td>@dataRow["bus_number"]</td>
-                                <td>@dataRow["bus_type"].ToString().ToUpper()</td>
-                                <td>@dataRow["bus_seat"]</td>
-                                @if (Convert.ToInt32(@dataRow["bus_is_ac"]) == 1)
-                                {
-                                    <td>Yes</td>
-                                }
-                                else
-                                {
-                                    <td>No</td>
-                                }
-                                @if (Convert.ToInt32(@dataRow["bus_is_sleeper"]) == 1)
-                                {
-                                    <td>Sleeper</td>
-                                }
-                                else
-                                {
-                                    <td>Seater</td>
-                                }
-                                <td>
-                                    <img src="@dataRow["bus_image"]" alt="Bus Image" style="width: 100px;" />
-                                </td>
+                                <td>@dataRow["RegistrationNumber"]</td>
+                                <td>@dataRow["TypeName"]</td>
+                                <td>@dataRow["Manufacturer"]</td>
+                                <td>@dataRow["ModelNo"]</td>
+
 
                                 <td>
                                     <a type="button" class="btn btn-danger">Delete</a>

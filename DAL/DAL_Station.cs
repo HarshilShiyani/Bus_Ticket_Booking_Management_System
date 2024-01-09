@@ -2,7 +2,6 @@
 using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
 using System.Data;
 using System.Data.Common;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Bus_Ticket_Booking_Management_System.DAL
 {
@@ -84,9 +83,31 @@ namespace Bus_Ticket_Booking_Management_System.DAL
                     stationmodel.Location = reader["Location"].ToString();
                     stationmodel.Description = reader["Description"].ToString();
                 }
-                return stationmodel;
 
             }
+            return stationmodel;
+
+        }
+        #endregion
+
+        #region Station_DDL
+        public List<StationDDL> Station_DDL()
+        {
+            List<StationDDL> stationDDL = new List<StationDDL>();
+            DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_Station_DDL");
+            using(IDataReader dr =sqlDatabase.ExecuteReader(dbCommand))
+            {
+                while(dr.Read())
+                {
+                    StationDDL tempStation = new StationDDL();
+                    tempStation.SourceID = Convert.ToInt32(dr["StationID"]);
+                    tempStation.DestinationID = Convert.ToInt32(dr["StationID"]);
+                    tempStation.StationName = dr["StationName"].ToString();
+                    stationDDL.Add(tempStation);
+                }
+                
+            }
+            return stationDDL;
         }
         #endregion
 
