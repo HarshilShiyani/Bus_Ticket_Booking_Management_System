@@ -44,33 +44,31 @@
             <div class="card pt-4">
                 <div class="card-body">
                     <form class="row" id="searchticketform" method="post">
+
                         <div class="col">
-                            <div class="row">
                                 <span class="input-group-text mb-2">
                                     <i class="bi bi-bus-front"></i>
-                                    <select class="form-control" id="SourceID" asp-for="SourceID" asp-items="@(new SelectList(ViewBag.Station_DDL,"SourceID","StationName"))"
+                                    <select class="form-control" id="SourceID" asp-for="SourceID" asp-items="@(new SelectList(ViewBag.Station_DDL,"Stid","StationName"))"
                                             style="border: none !important; box-shadow: none !important;">
                                         <option disabled selected>Select Source</option>
                                     </select>
                                 </span>
-                                <span asp-validation-for="SourceID" class="text-danger mt-1"></span>
-                            </div>
+                                <span asp-validation-for="SourceID" class="text-danger"></span>
                         </div>
-                        <div class="col-1 pt-2 ps-5 ">
+
+                        <div class="col-1 pt-2 ps-5 " id="swapsource_destination">
                             <a>
                                 <i class="bi bi-arrow-left-right bg-info fs-5 rounded"></i>
                             </a>
                         </div>
+
                         <div class="col">
                             <span class="input-group-text mb-2">
                                 <i class="bi bi-bus-front"></i>
-                                <select class="form-control" id="DestinatioID" asp-for="DestinationID" asp-items="@(new SelectList(ViewBag.Station_DDL,"SourceID","StationName"))"
+                                <select class="form-control" id="DestinationID" asp-for="DestinationID" asp-items="@(new SelectList(ViewBag.Station_DDL,"Stid","StationName"))"
                                         style="border: none !important; box-shadow: none !important;">
-
                                     <option disabled selected>Select Destination</option>
-
                                 </select>
-
                             </span>
                             <span asp-validation-for="DestinationID" class="text-danger"></span>
                         </div>
@@ -78,10 +76,11 @@
                         <div class="col">
                             <span class="input-group-text">
                                 <i class="bi bi-calendar-date"></i>
-                                <input type="date" class="form-control" id="onDate" asp-for="Date">
-
+                                <input type="date" class="form-control" id="onDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" asp-for="JourneyDate">
                             </span>
+                            <span asp-validation-for="JourneyDate" class="text-danger"></span>
                         </div>
+
                         <div class="col pt-2">
                             <label class="form-label">
                                 <button type="submit" id="btnsubmit" class="btn btn-primary">Submit</button>
@@ -97,64 +96,112 @@
     </div>
 </section>
 
+<div id="loading" class="modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="d-flex align-items-center justify-content-center">
+                    <div class="spinner-border mr-2" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mb-0">   Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation.unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+   
+
     <script>
         $(document).ready(function () {
             // Initialize select2 for SourceID and DestinatioID
-            $('#SourceID, #DestinatioID').select2({
+            $('#SourceID, #DestinationID').select2({
                 allowClear: false,
                 width: '100%',
                 dropdownAutoWidth: false,
                 closeOnSelect: true,
             });
+            
+            $("#swapsource_destination").click(function (e) {
+                // Get the selected text and value for both source and destination
+                var sourceValue = $("#SourceID").val();
+                var destinationValue = $("#DestinationID").val();
 
+                // Swap the values and texts
+                $("#SourceID").val(destinationValue).trigger('change'); // Use trigger('change') to update select2
+                $("#DestinationID").val(sourceValue).trigger('change'); // Use trigger('change') to update select2
+            });
+
+
+            
             // Attach a submit event handler to the form
             $('#searchticketform').submit(function (event) {
+
+                //check if not null
+                var selectedValue = $("#SourceID").val();
+                var selectedValue2 = $("#DestinationID").val();
+
+                if (selectedValue !== null && selectedValue !== undefined && selectedValue !== ''
+                    && selectedValue2 !== null && selectedValue2 !== undefined && selectedValue2 !== '') {
+                
+
                 // Prevent the default form submission
                 event.preventDefault();
+                $('#ticketcard').on('click', '#viewSeatBtn', function () {
+                    var routeId = $('#routeid').val();
+                    window.location.href = '@Url.Action("SeatSelection", "Ticket", new { area = "Ticket" })' + '?routeId=' + routeId;
+                });
                 // Check if the form is valid
-                if ($(this).valid()) {
-                    // Serialize the form data
-                    var serializedFormData = $(this).serialize();
+                    if ($(this).valid()) {
+                        $('#loading').show();
+                        // Serialize the form data
+                        var serializedFormData = $(this).serialize();
 
-                    var ticketSearchModel = {};
+                        var ticketSearchModel = {};
 
-                    var formDataObject = {};
-                    $.each(serializedFormData.split('&'), function (index, value) {
-                        var pair = value.split('=');
-                        formDataObject[pair[0]] = decodeURIComponent(pair[1] || '');
-                        ticketSearchModel[pair[0]] = decodeURIComponent(pair[1] || '');
-                    });
-                    console.log(formDataObject.SourceID);
-                    console.log(formDataObject.DestinationID);
+                        var formDataObject = {};
+                        $.each(serializedFormData.split('&'), function (index, value) {
+                            var pair = value.split('=');
+                            formDataObject[pair[0]] = decodeURIComponent(pair[1] || '');
+                            ticketSearchModel[pair[0]] = decodeURIComponent(pair[1] || '');
+                        });
+                        console.log(formDataObject.SourceID);
+                        console.log(formDataObject.DestinationID);
+                        console.log(formDataObject.JourneyDate);
+                        // Make an AJAX request
+                        $.ajax({
+                            url: "@Url.Action("DisplaySerchedTicket", "Ticket", new { area = "Ticket" })",
+                            method: "GET",
+                            data: { 'SourceID': formDataObject.SourceID, 'DestinationID': formDataObject.DestinationID, 'JourneyDate': formDataObject.JourneyDate },
+                            success: function (data) {
+                                data = JSON.parse(data);
+                                console.log(data);
+                                setTimeout(function () {
+                                    $('#loading').hide();
 
-                    // Make an AJAX request
-                    $.ajax({
-                        url: "@Url.Action("DisplaySerchedTicket", "Ticket", new { area = "Ticket" })",
-                        method: "GET",
-                        data: { 'SourceID': formDataObject.SourceID, 'DestinationID': formDataObject.DestinationID },
-                        success: function (data) {
-                            data = JSON.parse(data);
-                            console.log(data);
+                                    $('#ticketcard').empty();
+                                    $('#loading').hide();
 
-                            // Assume 'data' is an array containing ticket details
-                            // Clear existing content in the container
-                            $('#ticketcard').empty();
+                                    $.each(data, function (index, ticket) {
+                                        // Load and render the partial view for a single ticket
+                                        $.get('@Url.Action("RenderTicketPartial", "Ticket", new { area = "Ticket" })', { ticket: JSON.stringify(ticket) }, function (html) {
+                                            $('#ticketcard').append(html);
+                                        });
+                                    });
+                                }, 2000);
+                            },
+                            error: function (error) {
+                                $('#loading').hide();
 
-                            $.each(data, function (index, ticket) {
-                                // Load and render the partial view for a single ticket
-                                $.get('@Url.Action("RenderTicketPartial", "Ticket", new { area = "Ticket" })', { ticket: JSON.stringify(ticket) }, function (html) {
-                                    $('#ticketcard').append(html);
-                                });
-                            });
-                        },
-                        error: function (error) {
-                            console.error(error);
-                        }
-                    });
-
+                                console.error(error);
+                            }
+                        });
+                    }
                 }
             });
         });

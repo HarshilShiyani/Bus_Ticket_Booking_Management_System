@@ -14,6 +14,7 @@ namespace Bus_Ticket_Booking_Management_System.DAL
             DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_Search_Route");
             sqlDatabase.AddInParameter(dbCommand, "@SourceId", DbType.Int32, ticketSearchmodel.SourceID);
             sqlDatabase.AddInParameter(dbCommand, "@DestinationId", DbType.Int32, ticketSearchmodel.DestinationID);
+            sqlDatabase.AddInParameter(dbCommand, "@date", DbType.Date, ticketSearchmodel.JourneyDate);
 
             List<DiaplaySerchedRouteDetail> diaplaySerchedRouteDetails = new List<DiaplaySerchedRouteDetail>();
 

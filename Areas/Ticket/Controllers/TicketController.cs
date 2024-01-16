@@ -15,9 +15,9 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Ticket.Controllers
             ViewBag.Station_DDL = dAL_Station.Station_DDL();
             return View("SearchTicket");
         }
-        public IActionResult SeatSelection() 
+        public IActionResult SeatSelection(int routeId) 
         { 
-            return View(); 
+            return View("SeatSelection"); 
         }        
         public JsonResult DisplaySerchedTicket(TicketSearchmodel ticketSearchModel)
         {

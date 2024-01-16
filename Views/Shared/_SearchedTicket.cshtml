@@ -1,59 +1,51 @@
 ﻿@model Bus_Ticket_Booking_Management_System.Areas.Ticket.Models.DiaplaySerchedRouteDetail
-<div>
-    <div class="row">
-        <div class="col text-start text-dark mt-1">
-            <b class="bg-info p-1 rounded">@Model.BusTypeName</b>
-        </div>
-        <div class="col text-end mt-1 text-dark">
-            <b class="bg-info p-1 rounded">INR @Model.Fare</b>
-        </div>
+@Html.HiddenFor(x=>x.routeid)
+<div class="row">
+    <div class="col text-start text-dark mb-1">
+        <b class="bg-info p-1 rounded">@Model.BusTypeName</b>
     </div>
-    <div class="container text-center">
-        <div class="row pt-2">
-            <div class="col">
-                <div class="row mb-2"><b>TripCode</b></div>
-                <div class="row mb-2"><h6>@Model.TripCode</h6></div>
+    <div class="col text-end mt-1 text-dark">
+        <b class="bg-info p-1 rounded">INR @Model.Fare</b>
+    </div>
+</div>
+<div class="container text-center">
+    <div class="row pt-2">
+        <div class="col">
+            <div class="row mb-2"><b>TripCode</b></div>
+            <div class="row mb-2"><h6>@Model.TripCode</h6></div>
+        </div>
+        <div class="col" hidden id="routeid">
+            <div class="row mb-2"><b>routeid</b></div>
+            <div class="row mb-2"><h6>@Model.routeid</h6></div>
+        </div>
+        <div class="col">
+            <div class="row mb-2"><b>Dept.Time</b></div>
+            <div class="row mb-2"><h6>@Model.DeptTime</h6></div>
+        </div>
+        <div class="col">
+            <div class="row mb-2"><b>Origin</b></div>
+            <div class="row mb-2"><h6>@Model.Origin</h6></div>
+        </div>
+        <div class="col">
+            <div class="row mb-2"><b>Destination</b></div>
+            <div class="row mb-2"><h6>@Model.Destination</h6></div>
+        </div>
+        <div class="col">
+            <div class="row mb-2"><b>Duration</b></div>
+            <div class="row mb-2"><h6>@Model.Duration</h6></div>
+        </div>
+        <div class="col">
+            <div class="row mb-2"><b>Fare</b></div>
+            <div class="row"><h6>₹@Model.Fare</h6></div>
+        </div>
+        <div class="col pt-2">
+            <div class="d-grid gap-2 d-md-block">
+                <button type="button" class="btn btn-primary btn-sm" as>@Model.capacity &raquo;</button>
             </div>
-            <div class="col">
-                <div class="row mb-2"><b>Dept.Time</b></div>
-                <div class="row mb-2"><h6>@Model.DeptTime</h6></div>
-            </div>
-            <div class="col">
-                <div class="row mb-2"><b>Origin</b></div>
-                <div class="row mb-2"><h6>@Model.Origin</h6></div>
-            </div>
-            <div class="col">
-                <div class="row mb-2"><b>Destination</b></div>
-                <div class="row mb-2"><h6>@Model.Destination</h6></div>
-            </div>
-            <div class="col">
-                <div class="row mb-2"><b>Duration</b></div>
-                <div class="row mb-2"><h6>@Model.Duration</h6></div>
-            </div>
-            <div class="col">
-                <div class="row mb-2"><b>Fare</b></div>
-                <div class="row"><h6>₹@Model.Fare</h6></div>
-            </div>
-            <div class="col pt-2">
-                <div class="d-grid gap-2 d-md-block">
-                    <button type="button" class="btn btn-primary btn-sm">@Model.capacity &raquo;</button>
-                </div>
-                <div class="row"><p>View Seat</p></div>
+            <button class="bg-success" id="viewSeatBtn">View Seat</button>
         </div>
     </div>
 </div>
 <br />
 <hr />
-</div>
-<!-- _TicketPartial.cshtml -->
-@* <div class="card">
-    <div class="card-body">
-        <h5 class="card-title">@Model.TripCode</h5>
-        <p class="card-text">Departure Time: @Model.DeptTime</p>
-        <p class="card-text">Origin: @Model.Origin</p>
-        <p class="card-text">Destination: @Model.Destination</p>
-        <p class="card-text">Duration: @Model.Duration hrs</p>
-        <p class="card-text">Fare: ₹@Model.Fare</p>
-        <button class="btn btn-primary btn-sm">@Model.capacity &raquo; View Seats</button>
-    </div>
-</div> *@
+

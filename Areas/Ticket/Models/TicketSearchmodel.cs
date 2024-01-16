@@ -6,9 +6,14 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Ticket.Models
     {
         [Required(ErrorMessage ="Please Select Source City")]
         public int SourceID { get; set; }
+
         [Required(ErrorMessage = "Please Select Destination City")]
         public int DestinationID { get; set; }
-        public DateTime Date { get; set; }
+
+        [Required(ErrorMessage = "Please Select Journey Date")]
+        [DataType(DataType.Date)]
+
+        public DateTime JourneyDate { get; set; }
 
     }
 

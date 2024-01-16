@@ -100,8 +100,7 @@ namespace Bus_Ticket_Booking_Management_System.DAL
                 while(dr.Read())
                 {
                     StationDDL tempStation = new StationDDL();
-                    tempStation.SourceID = Convert.ToInt32(dr["StationID"]);
-                    tempStation.DestinationID = Convert.ToInt32(dr["StationID"]);
+                    tempStation.Stid = Convert.ToInt32(dr["StationID"]);
                     tempStation.StationName = dr["StationName"].ToString();
                     stationDDL.Add(tempStation);
                 }
