@@ -1,0 +1,86 @@
+﻿@{
+    Layout = "_Layout";
+}
+@model Bus_Ticket_Booking_Management_System.Areas.Bus.Models.Busmodel
+<head>
+    <style>
+        input[type="text"] {
+            width: 50%;
+        }
+
+        .select2-container .select2-selection--single {
+            border: none !important;
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<div class="pagetitle">
+    <h1>Bus</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+            <li class="breadcrumb-item active">Bus Add Edit</li>
+        </ol>
+    </nav>
+</div>
+@if (TempData["IsBusAdded"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle"></i>
+        @TempData["IsBusAdded"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h3 class="text-dark">Bus Add/Edit</h3>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-area="Bus" asp-controller="Bus" asp-action="BusSave">
+            @Html.HiddenFor(x=>x.BusID)
+
+            <div class="mb-3">
+                <label class="form-label">Bus Type</label>
+                <input type="text" class="form-control" asp-for="RegistrationNumber" placeholder="Bus RegistrationNumber">
+                <span class="form-text text-danger" asp-validation-for="RegistrationNumber"> </span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">BusType</label>
+                <br />
+                <select class="form-control" id="BusTypeID" asp-for="BusTypeID" asp-items="@(new SelectList(ViewBag.BusTypeDDL,"BusTypeID","BusType"))"
+                        style="border: none !important; box-shadow: none !important;">
+                    <option disabled selected>Select BusType</option>
+                </select>
+                <br />
+                <span class="form-text text-danger" asp-validation-for="BusTypeID"> </span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">NameOfManufacturer</label>
+                <input type="text" class="form-control" asp-for="NameOfManufacturer" placeholder="NameOfManufacturer">
+                <span class="form-text text-danger" asp-validation-for="NameOfManufacturer"> </span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">ModelNo</label>
+                <input type="text" class="form-control" asp-for="ModelNo" placeholder="ModelNo">
+                <span class="form-text text-danger" asp-validation-for="ModelNo"> </span>
+            </div>
+
+            <button type="submit" class="btn btn-success">Submit</button>
+            <a asp-area="Bus" asp-controller="Bus" asp-action="BusList" class="btn btn-primary">Back to List</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $('#BusTypeID').select2({
+            allowClear: false,
+            width: '15%',
+            dropdownAutoWidth: false,
+            closeOnSelect: true,
+        });
+    </script>
+}
