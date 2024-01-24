@@ -3,6 +3,7 @@ using Bus_Ticket_Booking_Management_System.Areas.Station.Models;
 using Bus_Ticket_Booking_Management_System.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SqlServer.Server;
+using System;
 using System.Data;
 
 namespace Bus_Ticket_Booking_Management_System.Areas.Routes.Controllers
@@ -90,23 +91,27 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Routes.Controllers
         #region SaveRouteStation
         public IActionResult SaveRouteStation(RouteStationModel formData)
         {
-
-            if (Convert.ToBoolean(dAL_Route.RouteAddEdtRouteStation(formData)))
-                {
-                    TempData["IsRouteStationAdded"] = "New Route Station Added Succesfully";
-                }
             
-            //else
-            //{
-            //    if (Convert.ToBoolean(dAL_Route.RouteAddEdtRouteStation(routeStationModel, routeDetailID, RouteID)))
-            //    {
-            //        TempData["IsRouteStationAdded"] = "Route Station Edited Succesfully";
-            //    }
-            //}
-            
+            dAL_Route.RouteAddEdtRouteStation(formData);
             return RedirectToAction("SelectRoute_By_RouteID");
 
         }
         #endregion
+
+
+        #region Delete_RouteStation
+        public IActionResult Delete_RouteStation(int RouteDetailID)
+        {
+            dAL_Route.Delete_RouteStation(RouteDetailID);
+            return RedirectToAction("SelectRoute_By_RouteID");
+        }
+        #endregion
+
+        [HttpGet]
+        public IActionResult StationEditModelFillDataOfRoute(int routeID, int routeDetailID)
+        {
+            RouteStationModel  jdata= dAL_Route.StationEditModelFillDataOfRoute(routeDetailID);
+            return Json(jdata);
+        }
     }
 }

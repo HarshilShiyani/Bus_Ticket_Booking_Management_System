@@ -115,18 +115,73 @@ namespace Bus_Ticket_Booking_Management_System.DAL
         #endregion
 
         #region RouteAddEdtRouteStatioin
-        public int  RouteAddEdtRouteStation(RouteStationModel stationModel)
+        public int RouteAddEdtRouteStation(RouteStationModel stationModel)
         {
+
+            if (stationModel.RouteDetailID != 0)
+            {
+                DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_Update_RouteStation");
+
+                sqlDatabase.AddInParameter(dbCommand, "@RouteDetailID", DbType.Int32, stationModel.RouteDetailID);
+                sqlDatabase.AddInParameter(dbCommand, "@StationID", DbType.Int32, stationModel.RouteStationId);
+                sqlDatabase.AddInParameter(dbCommand, "@StationOrder", DbType.Int32, stationModel.StationOrder);
+                sqlDatabase.AddInParameter(dbCommand, "@StationTime", DbType.Time, stationModel.StationTime);
+                sqlDatabase.AddInParameter(dbCommand, "@DistanceFromOrigin", DbType.Decimal, stationModel.DistanceFromOrigin);
+                return sqlDatabase.ExecuteNonQuery(dbCommand);
+
+            }
+            else
+            {
                 DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_Insert_RouteStation");
+
                 sqlDatabase.AddInParameter(dbCommand, "@RouteID", DbType.Int32, stationModel.RouteID);
                 sqlDatabase.AddInParameter(dbCommand, "@StationID", DbType.Int32, stationModel.RouteStationId);
                 sqlDatabase.AddInParameter(dbCommand, "@StationOrder", DbType.Int32, stationModel.StationOrder);
                 sqlDatabase.AddInParameter(dbCommand, "@StationTime", DbType.Time, stationModel.StationTime);
                 sqlDatabase.AddInParameter(dbCommand, "@DistanceFromOrigin", DbType.Decimal, stationModel.DistanceFromOrigin);
                 return sqlDatabase.ExecuteNonQuery(dbCommand);
-           
+
+            }
 
         }
         #endregion
+
+        #region StationEditModelFillDataOfRoute
+        public RouteStationModel StationEditModelFillDataOfRoute(int RouteDetailID)
+        {
+            RouteStationModel routeStationModel = new RouteStationModel();
+            DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_RouteStationDetailBy_RouteDetailId");
+
+            sqlDatabase.AddInParameter(dbCommand, "@RouteDetailID", DbType.Int32, RouteDetailID);
+            using (IDataReader dr = sqlDatabase.ExecuteReader(dbCommand))
+            {
+                if (dr.Read())
+                {
+                    routeStationModel.RouteID = Convert.ToInt32(dr["RouteID"]);
+                    routeStationModel.RouteDetailID = Convert.ToInt32(dr["RouteDetailID"]);
+                    routeStationModel.StationOrder = Convert.ToInt32(dr["StationOrder"]);
+
+                    routeStationModel.RouteStationId = Convert.ToInt32(dr["StationID"]);
+                    routeStationModel.StationTime = DateTime.Parse(dr["StationTime"].ToString());
+                    routeStationModel.DistanceFromOrigin = Convert.ToDouble(dr["DistanceFromOrigin"]);
+
+
+                }
+            }
+            return routeStationModel;
+        }
+        #endregion
+
+        #region Delete_RouteStation
+        public int Delete_RouteStation(int RouteDetailID)
+        {
+            DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_Delete_RouteStation");
+            sqlDatabase.AddInParameter(dbCommand, "@RouteDetailID", DbType.Int32, RouteDetailID);
+            return sqlDatabase.ExecuteNonQuery(dbCommand);
+        }
+
+        #endregion
+
+
     }
 }
