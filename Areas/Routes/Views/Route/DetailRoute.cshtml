@@ -1,0 +1,214 @@
+﻿@{
+    Layout = "_Layout";
+}
+@using System.Data;
+@model Tuple<DataTable, DataTable,Bus_Ticket_Booking_Management_System.Areas.Routes.Models.RouteStationModel>
+<div class="container">
+    <div class="pagetitle">
+        <h1>Routes</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+                <li class="breadcrumb-item active">Routes</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h3>Routes Detail</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Route Name</th>
+                            <th>Starting Time</th>
+                            <th>Source</th>
+                            <th>Destination</th>
+                            <th>Starting Date</th>
+                            <th>Ending Date</th>
+                            <th>Registration No.</th>
+                            <th>Type Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (DataRow dataRow in Model.Item1.Rows)
+                        {
+                            <tr>
+                                <td>@dataRow["RouteName"].ToString()</td>
+                                <td>@dataRow["starting_time"].ToString()</td>
+                                <td>@dataRow["Source"].ToString()</td>
+                                <td>@dataRow["Destination"].ToString() </td>
+                                <td>@String.Format("{0:dd MMM yyyy}", dataRow["Starting_date"])</td>
+                                <td>@String.Format("{0:dd MMM yyyy}", dataRow["Ending_date"])</td>
+                                <td>@dataRow["RegistrationNumber"].ToString()</td>
+                                <td>@dataRow["TypeName"].ToString()</td>
+                                <td>
+                                    <a type="button" class="btn btn-info" asp-controller="Route" asp-action="RouteAddEdit" asp-route-RouteID="@Convert.ToInt32(dataRow["RouteID"])">Edit</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div  id="RouteStationAddMessage">
+        
+    </div>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h3>Route's Station Detail</h3>
+            <div>
+                <button type="button" class="btn btn-success btn-add" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Add New Station
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Station Order</th>
+                            <th>Station Name</th>
+                            <th>StationTime</th>
+                            <th>Distance</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (DataRow dataRow in Model.Item2.Rows)
+                        {
+                            <tr>
+                                <td>@dataRow["StationOrder"].ToString()</td>
+                                <td>@dataRow["StationName"].ToString()</td>
+                                <td>@dataRow["StationTime"].ToString()</td>
+                                <td>@dataRow["DistanceFromOrigin"].ToString() </td>
+                                <td>
+                                    <a type="button" class="btn btn-info" asp-route-RouteID="@Convert.ToInt32(dataRow["RouteID"])" asp-route-RouteDetailID="@Convert.ToInt32(dataRow["RouteDetailID"])" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Modal Station</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" id="routeStationForm">
+                   
+                    <div class="mb-3">
+                        <br />
+                        <label class="form-label" for="StationTime">RouteDetailID</label>
+                        <input type="text" id="RouteDetailID" name="RouteDetailID" value="" disabled />
+                        <span class="text-danger"></span>
+                        <br />
+                    </div>
+
+                    <div class="mb-3">
+                        <br />
+                        <label class="form-label" for="StationTime">RouteID</label>
+                        <input type="text" id="RouteID" name="RouteID" value="@Convert.ToInt32(Context.Request.Query["RouteID"])" disabled />
+                        <span class="text-danger"></span>
+                        <br />
+
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="RouteStationId">First Station</label>
+                        <br />
+                        <select class="form-control" id="RouteStationId" name="@nameof(Model.Item3.RouteStationId)" required>
+                            <option disabled selected>Select First Station</option>
+                            @foreach (var station in ViewBag.Station_DDL)
+                            {
+                                <option value="@station.Stid">@station.StationName</option>
+                            }
+                        </select>
+                        <span class="text-danger"></span>
+                    </div>
+
+                    <!-- StationTime -->
+                    <div class="mb-3">
+                        <label class="form-label" for="StationTime">StationTime</label>
+                        <input type="time" class="form-control" id="StationTime" name="StationTime" required />
+                        <span class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="StationOrder">StationOrder</label>
+                        <input type="text" class="form-control" id="StationOrder" name="StationOrder" required />
+                        <span class="text-danger"></span>
+                    </div>
+
+                    <!-- DistanceFromOrigin -->
+                    <div class="mb-3">
+                        <label class="form-label" for="DistanceFromOrigin">DistanceFromOrigin</label>
+                        <input type="text" class="form-control" id="DistanceFromOrigin" name="DistanceFromOrigin" placeholder="DistanceFromOrigin" required />
+                        <span class="text-danger"></span>
+                    </div>
+
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Submit form using AJAX
+            $("#routeStationForm").submit(function (e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                // Fetch values from the form
+                var routeID = $("#RouteID").val();
+                var routeStationId = $("#RouteStationId").val();
+                var stationTime = $("#StationTime").val();
+                var stationOrder = $("#StationOrder").val();
+                var distanceFromOrigin = $("#DistanceFromOrigin").val();
+
+                // Create a data object with the form values
+                var formData = {
+                    RouteID: routeID,
+                    RouteStationId: routeStationId,
+                    StationTime: stationTime,
+                    StationOrder: stationOrder,
+                    DistanceFromOrigin: distanceFromOrigin
+                };
+                console.log(formData);
+                // Send data to the controller using AJAX
+                $.ajax({
+                    url: '/Routes/Route/SaveRouteStation', // Replace with your actual controller and action
+                    method: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        location.reload();
+                        $("#RouteStationAddMessage").html('<i class="bi bi-check-circle me-1"></i>Station added successfully<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>');
+
+                        
+                    },
+                    error: function (error) {
+                        // Handle error, if needed
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+
+}

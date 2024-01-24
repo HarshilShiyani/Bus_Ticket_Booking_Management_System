@@ -1,0 +1,93 @@
+﻿@* @{
+    Layout = "_Layout";
+}
+@model Bus_Ticket_Booking_Management_System.Areas.Routes.Models.RouteStationModel
+
+<style>
+    input[type="text"], input[type="time"], input[type="date"] {
+        width: 50%;
+    }
+
+</style>
+<div class="pagetitle">
+    <h1>Route</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Route Station</a></li>
+            <li class="breadcrumb-item active">Route Station Add Edit</li>
+        </ol>
+    </nav>
+</div>
+@if (TempData["IsRouteStationAdded"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle"></i>
+        @TempData["IsRouteStationAdded"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <h3 class="text-dark">Route Add/Edit</h3>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-area="Routes" asp-controller="Route" asp-action="SaveRouteStation">
+
+            <div class="mb-3" hidden>
+                <label class="form-label">RouteDetailID</label>
+                <input type="text" class="form-control" id="RouteDetailID" asp-for="RouteDetailID" placeholder="RouteDetailID">
+                <span class="form-text text-danger" asp-validation-for="RouteDetailID"> </span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">RouteID</label>
+                <input type="text" class="form-control" value="@TempData["RouteID"]" asp-for="RouteID" placeholder="RouteID" disabled>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Add Station</label>
+                <br />
+                <select class="form-control" id="StationID" asp-for="StationID" asp-items="@(new SelectList(ViewBag.Station_DDL,"Stid","StationName"))"
+                        style="border: none !important; box-shadow: none !important;">
+                    <option disabled selected>Select Station</option>
+                </select>
+                <br />
+                <span class="form-text text-danger" asp-validation-for="StationID"> </span>
+            </div>
+
+
+            <div class="mb-3">
+                <label class="form-label">StationOrder</label>
+                <input type="text" class="form-control" id="StationOrder" asp-for="StationOrder" placeholder="Station Order">
+                <span class="form-text text-danger" asp-validation-for="StationOrder"> </span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Station Time</label>
+                <input type="time" class="form-control" id="StationTime" asp-for="StationTime" placeholder="StationTime">
+                <span class="form-text text-danger" asp-validation-for="StationTime"> </span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Distance</label>
+                <input type="text" class="form-control" id="DistanceFromOrigin" asp-for="DistanceFromOrigin" placeholder="DistanceFromOrigin">
+                <span class="form-text text-danger" asp-validation-for="DistanceFromOrigin"> </span>
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+            <a asp-area="Routes" asp-controller="Route" asp-action="SelectRoute_By_RouteID"  class="btn btn-primary">Back to RouteList</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        $('#StationID').select2({
+            allowClear: false,
+            width: '50%',
+            dropdownAutoWidth: false,
+            closeOnSelect: true,
+        });
+    </script>
+    
+} *@

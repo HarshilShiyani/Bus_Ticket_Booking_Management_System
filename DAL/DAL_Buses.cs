@@ -185,5 +185,25 @@ namespace Bus_Ticket_Booking_Management_System.DAL
             return sqlDatabase.ExecuteNonQuery(dbCommand);
         }
         #endregion
+
+        #region Buses_DDL
+        public List<Buses_DDL> Buses_DDL()
+        {
+            List<Buses_DDL> buses_DDLs = new List<Buses_DDL>();
+            DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_Buses_DDL");
+            using (IDataReader dr = sqlDatabase.ExecuteReader(dbCommand))
+            {
+                while (dr.Read())
+                {
+                    Buses_DDL temp = new Buses_DDL();
+                    temp.BusID = Convert.ToInt32(dr["BusID"]);
+                    temp.BusBumber = dr["RegistrationNumber"].ToString();
+                    buses_DDLs.Add(temp);
+                }
+
+            }
+            return buses_DDLs;
+        }
+        #endregion
     }
 }

@@ -14,40 +14,40 @@
         </ol>
     </nav>
 </div>
-@if (ViewData["IsStationAdded"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="bi bi-check-circle"></i>
-        @ViewData["IsStationAdded"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-<div class="card">
-    <div class="card-header d-flex justify-content-between">
-        <h3 class="text-dark">Station Add/Edit</h3>
-    </div>
-    <div class="card-body">
-        <form method="post" asp-area="Station" asp-controller="Station" asp-action="StationSave">
-            @Html.HiddenFor(x=>x.StationID)
+    @if (ViewData["IsStationAdded"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            @ViewData["IsStationAdded"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h3 class="text-dark">Station Add/Edit</h3>
+        </div>
+        <div class="card-body">
+            <form method="post" asp-area="Station" asp-controller="Station" asp-action="StationSave">
+                @Html.HiddenFor(x=>x.StationID)
 
-            <div class="mb-3">
-                <label class="form-label">Station Name</label>
-                <input type="text" class="form-control" asp-for="StationName" placeholder="Station Name">
-                <span class="form-text text-danger" asp-validation-for="StationName"> </span>
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">Station Name</label>
+                    <input type="text" class="form-control" asp-for="StationName" placeholder="Station Name">
+                    <span class="form-text text-danger" asp-validation-for="StationName"> </span>
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Location</label>
-                <input type="text" class="form-control" asp-for="Location" placeholder="Location">
-                <span class="form-text text-danger" asp-validation-for="Location"> </span>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Description</label>
-                <input type="text" class="form-control" asp-for="Description" placeholder="Description">
-                <span class="form-text text-danger" asp-validation-for="Description"> </span>
-            </div>
-            <button type="submit" class="btn btn-success">Submit</button>
-            <a asp-area="Station" asp-controller="Station" asp-action="StationList" class="btn btn-primary">Back to List</a>
-        </form>
+                <div class="mb-3">
+                    <label class="form-label">Location</label>
+                    <input type="text" class="form-control" asp-for="Location" placeholder="Location">
+                    <span class="form-text text-danger" asp-validation-for="Location"> </span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-control" asp-for="Description" placeholder="Description">
+                    <span class="form-text text-danger" asp-validation-for="Description"> </span>
+                </div>
+                <button type="submit" class="btn btn-success">Submit</button>
+                <a asp-area="Station" asp-controller="Station" asp-action="StationList" class="btn btn-primary">Back to List</a>
+            </form>
+        </div>
     </div>
-</div>

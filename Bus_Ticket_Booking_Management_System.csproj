@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="Areas\Bus\Data\" />
     <Folder Include="Areas\Routes\Data\" />
-    <Folder Include="Areas\Routes\Models\" />
     <Folder Include="Areas\Station\Data\" />
     <Folder Include="Areas\Ticket\Data\" />
   </ItemGroup>
