@@ -181,7 +181,5 @@ namespace Bus_Ticket_Booking_Management_System.DAL
         }
 
         #endregion
-
-
     }
 }

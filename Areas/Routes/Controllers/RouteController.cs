@@ -1,5 +1,6 @@
 ﻿using Bus_Ticket_Booking_Management_System.Areas.Routes.Models;
 using Bus_Ticket_Booking_Management_System.Areas.Station.Models;
+using Bus_Ticket_Booking_Management_System.BAL;
 using Bus_Ticket_Booking_Management_System.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SqlServer.Server;
@@ -8,7 +9,7 @@ using System.Data;
 
 namespace Bus_Ticket_Booking_Management_System.Areas.Routes.Controllers
 {
-
+    [CheckAccess]
     [Area("Routes")]
     [Route("Routes/[controller]/[action]")]
     public class RouteController : Controller
@@ -98,7 +99,6 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Routes.Controllers
         }
         #endregion
 
-
         #region Delete_RouteStation
         public IActionResult Delete_RouteStation(int RouteDetailID)
         {
@@ -107,11 +107,12 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Routes.Controllers
         }
         #endregion
 
-        [HttpGet]
+        #region StationEditModelFillDataOfRoute
         public IActionResult StationEditModelFillDataOfRoute(int routeID, int routeDetailID)
         {
             RouteStationModel  jdata= dAL_Route.StationEditModelFillDataOfRoute(routeDetailID);
             return Json(jdata);
         }
+        #endregion
     }
 }

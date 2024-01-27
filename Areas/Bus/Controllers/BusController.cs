@@ -1,9 +1,11 @@
 ﻿using Bus_Ticket_Booking_Management_System.Areas.Bus.Models;
+using Bus_Ticket_Booking_Management_System.BAL;
 using Bus_Ticket_Booking_Management_System.DAL;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bus_Ticket_Booking_Management_System.Areas.Bus.Controllers
 {
+    [CheckAccess]
     [Area("Bus")]
     [Route("Bus/[controller]/[action]")]
     public class BusController : Controller

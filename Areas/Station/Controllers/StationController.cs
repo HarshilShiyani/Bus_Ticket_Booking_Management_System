@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using Bus_Ticket_Booking_Management_System.Areas.Station.Models;
 using static System.Collections.Specialized.BitVector32;
+using Bus_Ticket_Booking_Management_System.BAL;
 
 namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
 {
+    [CheckAccess]
     [Area("Station")]
     [Route("Station/[controller]/[action]")]
     public class StationController : Controller

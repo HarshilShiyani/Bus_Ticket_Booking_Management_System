@@ -2,18 +2,14 @@
 using Bus_Ticket_Booking_Management_System.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Bus_Ticket_Booking_Management_System.BAL;
 
 namespace Bus_Ticket_Booking_Management_System.Controllers
 {
+    [CheckAccess]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
+        #region Index(DashBoard Page)
         public IActionResult Index()
         {
             DAL_Count dAL_Count = new DAL_Count();
@@ -22,16 +18,28 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
             ViewBag.RouteCount = dAL_Count.GetRouteCount();
             return View();
         }
+        #endregion
 
-        public IActionResult Privacy()
+        #region Contact
+        public IActionResult Contact()
         {
             return View();
         }
+        #endregion
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        #region FAQ
+        public IActionResult FAQ()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View();
         }
+        #endregion
+
+        #region Profile
+        public IActionResult Profile()
+        {
+            return View();
+        }
+        #endregion
+
     }
 }

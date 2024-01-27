@@ -46,14 +46,14 @@
                     <form class="row" id="searchticketform" method="post">
 
                         <div class="col">
-                                <span class="input-group-text mb-2">
-                                    <i class="bi bi-bus-front"></i>
-                                    <select class="form-control" id="SourceID" asp-for="SourceID" asp-items="@(new SelectList(ViewBag.Station_DDL,"Stid","StationName"))"
-                                            style="border: none !important; box-shadow: none !important;">
-                                        <option disabled selected>Select Source</option>
-                                    </select>
-                                </span>
-                                <span asp-validation-for="SourceID" class="text-danger"></span>
+                            <span class="input-group-text mb-2">
+                                <i class="bi bi-bus-front"></i>
+                                <select class="form-control" id="SourceID" asp-for="SourceID" asp-items="@(new SelectList(ViewBag.Station_DDL,"Stid","StationName"))"
+                                        style="border: none !important; box-shadow: none !important;">
+                                    <option disabled selected>Select Source</option>
+                                </select>
+                            </span>
+                            <span asp-validation-for="SourceID" class="text-danger"></span>
                         </div>
 
                         <div class="col-1 pt-2 ps-5 " id="swapsource_destination">
@@ -115,7 +115,7 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation.unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
-   
+
 
     <script>
         $(document).ready(function () {
@@ -126,7 +126,7 @@
                 dropdownAutoWidth: false,
                 closeOnSelect: true,
             });
-            
+
             $("#swapsource_destination").click(function (e) {
                 // Get the selected text and value for both source and destination
                 var sourceValue = $("#SourceID").val();
@@ -138,25 +138,33 @@
             });
 
 
-            
+
             // Attach a submit event handler to the form
             $('#searchticketform').submit(function (event) {
 
+                $('#ticketcard').empty();
                 //check if not null
                 var selectedValue = $("#SourceID").val();
                 var selectedValue2 = $("#DestinationID").val();
 
-                if (selectedValue !== null && selectedValue !== undefined && selectedValue !== ''
-                    && selectedValue2 !== null && selectedValue2 !== undefined && selectedValue2 !== '') {
-                
+                if (selectedValue == selectedValue2 ) {
+                    $('#ticketcard').empty();
+                    
+                    alert("Both Station must be unique");
+                    event.preventDefault();
 
-                // Prevent the default form submission
-                event.preventDefault();
-                $('#ticketcard').on('click', '#viewSeatBtn', function () {
-                    var routeId = $('#routeid').val();
-                    window.location.href = '@Url.Action("SeatSelection", "Ticket", new { area = "Ticket" })' + '?routeId=' + routeId;
-                });
-                // Check if the form is valid
+                }
+                else if (selectedValue !== null && selectedValue !== undefined && selectedValue !== ''
+                    && selectedValue2 !== null && selectedValue2 !== undefined && selectedValue2 !== '') {
+
+
+                    // Prevent the default form submission
+                    event.preventDefault();
+                    $('#ticketcard').on('click', '#viewSeatBtn', function () {
+                        var routeId = $('#routeid').val();
+                        window.location.href = '@Url.Action("SeatSelection", "Ticket", new { area = "Ticket" })' + '?routeId=' + routeId;
+                    });
+                    // Check if the form is valid
                     if ($(this).valid()) {
                         $('#loading').show();
                         // Serialize the form data
@@ -170,17 +178,13 @@
                             formDataObject[pair[0]] = decodeURIComponent(pair[1] || '');
                             ticketSearchModel[pair[0]] = decodeURIComponent(pair[1] || '');
                         });
-                        console.log(formDataObject.SourceID);
-                        console.log(formDataObject.DestinationID);
-                        console.log(formDataObject.JourneyDate);
-                        // Make an AJAX request
+                        
                         $.ajax({
                             url: "@Url.Action("DisplaySerchedTicket", "Ticket", new { area = "Ticket" })",
                             method: "GET",
                             data: { 'SourceID': formDataObject.SourceID, 'DestinationID': formDataObject.DestinationID, 'JourneyDate': formDataObject.JourneyDate },
                             success: function (data) {
                                 data = JSON.parse(data);
-                                console.log(data);
                                 setTimeout(function () {
                                     $('#loading').hide();
 
@@ -207,106 +211,4 @@
         });
     </script>
 }
-@* <script>
-        $(document).ready(function () {
-            // Initialize select2 for SourceID and DestinatioID
-            $('#SourceID, #DestinatioID').select2({
-                allowClear: false,
-                width: '100%',
-                dropdownAutoWidth: false,
-                closeOnSelect: true,
-            });
-
-            // Attach a submit event handler to the form
-            $('#searchticketform').submit(function (event) {
-                // Prevent the default form submission
-                event.preventDefault();
-                // Check if the form is valid
-                if ($(this).valid()) {
-                    // Serialize the form data
-                    var serializedFormData = $(this).serialize();
-
-                    var ticketSearchModel = {};
-
-                    var formDataObject = {};
-                    $.each(serializedFormData.split('&'), function (index, value) {
-                        var pair = value.split('=');
-                        formDataObject[pair[0]] = decodeURIComponent(pair[1] || '');
-                        ticketSearchModel[pair[0]] = decodeURIComponent(pair[1] || '');
-                    });
-                    console.log(formDataObject.SourceID);
-                    console.log(formDataObject.DestinationID);
-
-                    // Make an AJAX request
-                    $.ajax({
-                        url: "@Url.Action("DisplaySerchedTicket", "Ticket", new { area = "Ticket" })",
-                        method: "GET",
-                        data: { 'SourceID': formDataObject.SourceID, 'DestinationID': formDataObject.DestinationID },
-                        success: function (data) {
-                            data = JSON.parse(data);
-                            console.log(data);
-
-                            // Assume 'data' is an array containing ticket details
-                            // Clear existing content in the container
-                            $('#ticketcard').empty();
-
-                            $.each(data, function (index, ticket) {
-                                // Create the card div
-                                var cardDiv = $('<div>').addClass('card').attr('id', 'ticketcard').appendTo('#ticketcard');
-
-                                // Create the row div
-                                var rowDiv = $('<div>').addClass('row').appendTo(cardDiv);
-
-                                // Left column
-                                var leftCol = $('<div>').addClass('col text-start text-dark mt-1').appendTo(rowDiv);
-                                $('<b>').addClass('bg-info p-1 rounded').text(ticket.BusTypeName).appendTo(leftCol);
-
-                                // Right column
-                                var rightCol = $('<div>').addClass('col text-end mt-1 text-dark').appendTo(rowDiv);
-                                $('<b>').addClass('bg-info p-1 rounded').text('INR ' + ticket.Fare.toFixed(0) + ' ₹').appendTo(rightCol);
-
-                                // Container for trip details
-                                var containerDiv = $('<div>').addClass('container text-center').appendTo(cardDiv);
-
-                                // Row for trip details
-                                var tripRow = $('<div>').addClass('row pt-2').appendTo(containerDiv);
-
-                                // Iterate through trip details and create columns
-                                $.each(['TripCode', 'Origin', 'DeptTime', 'Destination', 'ArrivalTime', 'Duration', 'Fare',], function (i, property) {
-                                    var col = $('<div>').addClass('col').appendTo(tripRow);
-                                    $('<div>').addClass('row mb-2').html('<b>' + property + '</b>').appendTo(col);
-                                    if (property === 'Duration') {
-                                        $('<div>').addClass('row mb-2').html('<h6>' + ticket[property] + ' hrs</h6>').appendTo(col);
-                                    }
-                                    else if (property === 'Fare') {
-                                        $('<div>').addClass('row mb-2').html('<h6>' + ticket[property] + ' ₹</h6>').appendTo(col);
-                                    }
-                                    else {
-                                        $('<div>').addClass('row mb-2').html('<h6>' + ticket[property] + '</h6>').appendTo(col);
-                                    }
-                                });
-
-                                // Button column
-                                var buttonCol = $('<div>').addClass('col pt-2').appendTo(tripRow);
-                                var buttonContainer = $('<div>').addClass('d-grid gap-2 d-md-block').appendTo(buttonCol);
-
-                                $('<button>')
-                                    .addClass('btn btn-primary btn-sm')
-                                    .html(ticket.capacity )
-                                    .appendTo(buttonContainer);
-
-                                $('<div>').addClass('row').html('<p>View Seat</p>').appendTo(buttonCol);
-                            });
-
-                        },
-                        error: function (error) {
-                            console.error(error);
-                        }
-                    });
-
-                }
-            });
-        });
-    </script> *@
-
 

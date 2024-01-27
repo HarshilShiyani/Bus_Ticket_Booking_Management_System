@@ -5,6 +5,7 @@ namespace Bus_Ticket_Booking_Management_System.BAL
 {
     public class BAL_Station
     {
+        #region PR_AllStationList
         public DataTable PR_AllStationList(int PageNumber)
         {
             try
@@ -18,6 +19,7 @@ namespace Bus_Ticket_Booking_Management_System.BAL
                 return null;
             }
         }
+        #endregion
 
     }
 }

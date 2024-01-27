@@ -9,6 +9,8 @@ namespace Bus_Ticket_Booking_Management_System.DAL
     public class DAL_Ticket :DAL_Helper
     {
         SqlDatabase sqlDatabase = new SqlDatabase(ConnString);
+
+        #region SerchTicket
         public List<DiaplaySerchedRouteDetail> SerchTicket(TicketSearchmodel ticketSearchmodel)
         {
             DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_Search_Route");
@@ -42,13 +44,15 @@ namespace Bus_Ticket_Booking_Management_System.DAL
 
             return diaplaySerchedRouteDetails;
         }
+        #endregion
 
+        #region Calculatedfare
         public int Calculatedfare(double temp)
         {
             double totalFare = 30 + (temp * 1.5);
             int roundedFare = (int)Math.Round(totalFare);
             return roundedFare;
         }
-
+        #endregion
     }
 }
