@@ -5,6 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 
 using Bus_Ticket_Booking_Management_System.BAL;
+using NuGet.Protocol.Plugins;
+using System.Net.Mail;
+using System.Net;
+using static System.Net.WebRequestMethods;
+
 namespace Bus_Ticket_Booking_Management_System.Controllers
 {
     public class LoginController : Controller
@@ -32,7 +37,7 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
             {
                 error += " <br /> <i class=\"bi bi-x-circle\"></i> Password is Required";
             }
-            if(error != null )
+            if (error != null)
             {
                 TempData["error"] = error;
                 TempData["error"] = error;
@@ -42,7 +47,7 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
             else
             {
                 DataTable dataTable = dAL_Login.CheckLogin(login);
-                if (dataTable.Rows.Count>0)
+                if (dataTable.Rows.Count > 0)
                 {
                     foreach (DataRow row in dataTable.Rows)
                     {
@@ -50,6 +55,8 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
                         HttpContext.Session.SetString("Username", row["Username"].ToString());
                         HttpContext.Session.SetString("Password", row["Password"].ToString());
                         HttpContext.Session.SetString("Role", row["Password"].ToString());
+                        HttpContext.Session.SetString("EmailID", row["EmailID"].ToString());
+
 
                         break;
                     }
@@ -58,9 +65,9 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
                 {
                     TempData["error"] = "UserName Or Password Is Invalid";
                 }
-                if(HttpContext.Session.GetString("Username") != null && HttpContext.Session.GetString("Password") != null)
+                if (HttpContext.Session.GetString("Username") != null && HttpContext.Session.GetString("Password") != null)
                 {
-                    return RedirectToAction("Index","Home");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             return RedirectToAction("LoginPage");
@@ -71,8 +78,59 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
-            return RedirectToAction("LoginPage","Login");
+            return RedirectToAction("LoginPage", "Login");
         }
         #endregion
+
+        [IsLogged]
+
+        public ActionResult ForgotPasswordPage()
+        {
+
+            return View();
+        }
+        public ActionResult ForgotPasswordAction(Login login)
+        {
+            string password=dAL_Login.FetchPasswordByUsername(login.Username);
+            if (login.Username != null)
+            {
+                if(password != null)
+                {
+                    using (MailMessage mm = new MailMessage("harshilshiyani5@gmail.com", login.Username.ToString()))
+                    {
+                        try
+                        {
+                            mm.Subject = "Welcome To Bus Admin";
+                            mm.Body = "Your username is " + login.Username.ToString() + " and Password is=" + password;
+                            mm.IsBodyHtml = true;
+
+                            using (SmtpClient smtp = new SmtpClient())
+                            {
+                                smtp.Host = "smtp.gmail.com";
+                                smtp.EnableSsl = true;
+                                NetworkCredential NetworkCred = new NetworkCredential("harshilshiyani5@gmail.com", "rxoqekpraeztcncr");
+                                smtp.UseDefaultCredentials = false;
+                                smtp.Credentials = NetworkCred;
+                                smtp.Port = 587;
+                                smtp.Send(mm);
+                                TempData["ForgotPasswordmeaasge"] = "Password is Sended to your ragistered EmailID";
+                            }
+                        }
+                        catch (SmtpException ex)
+                        {
+                            Console.WriteLine("Error sending email: " + ex.Message);
+                        }
+                    }
+
+                }
+                else
+                {
+                    TempData["ForgotPasswordmeaasge"] = "Your user name is invalid Or You are not ragistered Please Contact your Manager";
+                }
+
+            }
+            return RedirectToAction("ForgotPasswordPage");
+
+        }
     }
 }

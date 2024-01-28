@@ -20,5 +20,26 @@ namespace Bus_Ticket_Booking_Management_System.BAL
             return username;
         }
         #endregion
+        #region UserID
+        public static int? UserID()
+        {
+            int UserID = 0;
+            if (_contextAccessor.HttpContext.Session.GetString("UserID") != null)
+            {
+                UserID = Convert.ToInt32(_contextAccessor.HttpContext.Session.GetString("UserID"));
+            }
+            return UserID;
+        }
+        #endregion
+
+        public static string? EmailID()
+        {
+            string EmailID = "";
+            if (_contextAccessor.HttpContext.Session.GetString("EmailID") != null)
+            {
+                EmailID = _contextAccessor.HttpContext.Session.GetString("EmailID").ToString();
+            }
+            return EmailID;
+        }
     }
 }
