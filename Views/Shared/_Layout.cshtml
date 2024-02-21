@@ -253,7 +253,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" asp-action="Logout" asp-controller="Login">
+                            <a class="dropdown-item d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#logoutModal">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Log Out</span>
                             </a>
@@ -264,8 +264,8 @@
 
             </ul>
         </nav><!-- End Icons Navigation -->
-
     </header>
+
     <!-- End Header -->
     <!-- ======= Sidebar ======= -->
     <aside id="sidebar" class="sidebar">
@@ -332,6 +332,17 @@
                 </a>
             </li>
 
+                @if (CV.Role() == "Manager")
+                {
+                <li class="nav-item">
+                    <a class="nav-link collapsed">
+                        <i class="bi bi-person-fill-add"></i>
+                        <span>Add Menber</span>
+                    </a>
+                </li>
+                }
+
+
             <li class="nav-heading">Pages</li>
 
             <li class="nav-item">
@@ -381,6 +392,41 @@
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Logout</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are You sure want to Logout ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmLogout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmLogout() {
+            $.ajax({
+                url: '@Url.Action("Logout", "Login")',
+                type: 'POST',
+                success: function () {
+                    window.location.href = "/Login/LoginPage";
+                },
+                error: function () {
+                    console.log('Error performing action');
+                }
+            });
+
+            $('#logoutModal').modal('hide');
+        }
+    </script>
+
     <!-- Vendor JS Files -->
     <script src="~/assets/vendor/apexcharts/apexcharts.min.js"></script>
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -393,6 +439,8 @@
     <script src="~/_framework/aspnetcore-browser-refresh.js"></script>
     <!-- Template Main JS File -->
     <script src="~/assets/js/main.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
 
     <!-- Sweetalert JS File -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

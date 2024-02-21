@@ -41,5 +41,14 @@ namespace Bus_Ticket_Booking_Management_System.BAL
             }
             return EmailID;
         }
+        public static string? Role()
+        {
+            string Role = "";
+            if (_contextAccessor.HttpContext.Session.GetString("Role") != null)
+            {
+                Role = _contextAccessor.HttpContext.Session.GetString("Role").ToString();
+            }
+            return Role;
+        }
     }
 }

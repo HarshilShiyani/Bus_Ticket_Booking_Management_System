@@ -54,7 +54,7 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
                         HttpContext.Session.SetString("UserID", row["UserID"].ToString());
                         HttpContext.Session.SetString("Username", row["Username"].ToString());
                         HttpContext.Session.SetString("Password", row["Password"].ToString());
-                        HttpContext.Session.SetString("Role", row["Password"].ToString());
+                        HttpContext.Session.SetString("Role", row["Role"].ToString());
                         HttpContext.Session.SetString("EmailID", row["EmailID"].ToString());
 
 

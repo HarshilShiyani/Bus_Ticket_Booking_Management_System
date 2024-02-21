@@ -76,7 +76,7 @@
                         <div class="col">
                             <span class="input-group-text">
                                 <i class="bi bi-calendar-date"></i>
-                                <input type="date" class="form-control" id="onDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" asp-for="JourneyDate">
+                                <input type="date" class="form-control" id="onDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddMonths(2).ToString("yyyy-MM-dd")" value="@DateTime.Now.ToString("yyyy-MM-dd")" asp-for="JourneyDate">
                             </span>
                             <span asp-validation-for="JourneyDate" class="text-danger"></span>
                         </div>
@@ -118,6 +118,9 @@
 
 
     <script>
+        function encodeParamsToBase64(params) {
+            return btoa(JSON.stringify(params));
+        }
         $(document).ready(function () {
             // Initialize select2 for SourceID and DestinatioID
             $('#SourceID, #DestinationID').select2({
@@ -147,13 +150,14 @@
                 var selectedValue = $("#SourceID").val();
                 var selectedValue2 = $("#DestinationID").val();
 
-                if (selectedValue == selectedValue2 ) {
+                if (selectedValue == selectedValue2 && selectedValue != null && selectedValue2 != null) {
                     $('#ticketcard').empty();
-                    
+
                     alert("Both Station must be unique");
                     event.preventDefault();
 
                 }
+
                 else if (selectedValue !== null && selectedValue !== undefined && selectedValue !== ''
                     && selectedValue2 !== null && selectedValue2 !== undefined && selectedValue2 !== '') {
 
@@ -161,9 +165,25 @@
                     // Prevent the default form submission
                     event.preventDefault();
                     $('#ticketcard').on('click', '#viewSeatBtn', function () {
-                        var routeId = $('#routeid').val();
-                        window.location.href = '@Url.Action("SeatSelection", "Ticket", new { area = "Ticket" })' + '?routeId=' + routeId;
+                        var routeId = parseInt($('#routeid').val()); // Convert to integer
+                        var onDate = $('#onDate').val();
+                        var sourceID = $('#SourceID').val();
+                        var destinationID = $('#DestinationID').val();
+                        var fare = $('#fare').text();
+                        console.log(routeId);
+                        console.log(onDate);
+                        console.log(sourceID);
+                        console.log(destinationID);
+                        console.log(fare);
+                        var encodedRouteId = encodeParamsToBase64(routeId.toString());
+                        var encodedonDate = encodeParamsToBase64(onDate);
+                        var encodedsourceID = encodeParamsToBase64(sourceID);
+                        var encodeddestinationID = encodeParamsToBase64(destinationID);
+                        var encodedonfare = encodeParamsToBase64(fare);
+
+                        window.location.href = '@Url.Action("SeatLayout", "Seat", new { area = "Seat" })' + '?routeId=' + encodedRouteId + '&onDate=' + encodedonDate + '&sourceID=' + encodedsourceID + '&destinationID=' + encodeddestinationID + '&fare=' + encodedonfare;
                     });
+
                     // Check if the form is valid
                     if ($(this).valid()) {
                         $('#loading').show();
@@ -178,7 +198,7 @@
                             formDataObject[pair[0]] = decodeURIComponent(pair[1] || '');
                             ticketSearchModel[pair[0]] = decodeURIComponent(pair[1] || '');
                         });
-                        
+
                         $.ajax({
                             url: "@Url.Action("DisplaySerchedTicket", "Ticket", new { area = "Ticket" })",
                             method: "GET",

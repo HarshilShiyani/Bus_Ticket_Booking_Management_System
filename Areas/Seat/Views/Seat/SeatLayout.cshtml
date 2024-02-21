@@ -1,0 +1,328 @@
+﻿@{
+    Layout = "_Layout";
+}
+@using System.Data;
+@model List<Bus_Ticket_Booking_Management_System.Areas.Seat.Models.Seatmodel>
+
+<head>
+    <title>Bus Seat Selection</title>
+    <style>
+        .seat-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .seat {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #3498db;
+            background-color: #e0e0e0;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .selected {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        .unavailable {
+            background-color: #666666;
+            color: #000000;
+            cursor: not-allowed;
+        }
+
+        .card-footer {
+            text-align: center;
+        }
+
+        input[type="text"], input[type="number"], input[type="email"] {
+            width: 50%;
+        }
+    </style>
+</head>
+
+<div class="pagetitle">
+    <h1>Seat</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+            <li class="breadcrumb-item active">Seat Layout</li>
+        </ol>
+    </nav>
+</div>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title text-center">Bus Seat Selection</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="seat-map" class="seat-container">
+                            @foreach (var item in Model)
+                            {
+                                <div class="seat @(item.isAvailable == 0 ? "unavailable": "")"
+                                     onclick="toggleSeat(this, @item.isAvailable,@item.roueSeatID)">
+                                    <h1 hidden id="SeatID">@item.SeatID</h1>
+                                    <h1 id="RoueSeatID">@item.roueSeatID</h1>
+                                    <h1 hidden>@item.isAvailable</h1>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <button id="bookButton" class="btn btn-primary" onclick="bookSeats()">Book Selected Seats</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" id="formdivtag" style="display: none;">
+        <div class="card-header d-flex justify-content-between">
+            <h3 class="text-dark">Passenger Details</h3>
+        </div>
+        <form id="passengerDetailForm" class="ms-3" method="POST" onsubmit="submitPassengerdetails(event)">
+            <!-- Update the ID here -->
+            <div class="card-body">
+                @await Html.PartialAsync("_PassengerDetailsForm", Model)
+            </div>
+        </form>
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal modal-lg" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-light">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel"><i class="bi bi-check-circle-fill" id="message"></i> </h1>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><i class="bi bi-card-text"></i> <strong>Ticket ID:</strong> <span id="ticketId"></span></p>
+                            <p><i class="bi bi-geo-alt"></i> <strong>Route Code:</strong> <span id="routename"></span></p>
+
+                            <p><i class="bi bi-person"></i> <strong>Passenger Name:</strong> <span id="psgname"></span></p>
+                            <p><i class="bi bi-envelope"></i> <strong>Email ID:</strong> <span id="email"></span></p>
+                            <p><i class="bi bi-telephone"></i> <strong>Mobile No:</strong> <span id="mobileNo"></span></p>
+                            <p><i class="bi bi-geo-alt"></i> <strong>Source:</strong> <span id="source"></span></p>
+                            <p><i class="bi bi-geo-alt"></i> <strong>Destination:</strong> <span id="destination"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><i class="bi bi-calendar3"></i> <strong>Departure Date:</strong> <span id="departureDate"></span></p>
+                            <p><i class="bi bi-clock"></i> <strong>Departure Time:</strong> <span id="departureTime"></span></p>
+                            <p><i class="bi bi-clock"></i> <strong>Arrival Time:</strong> <span id="arrivalTime"></span></p>
+                            <p><i class="bi bi-patch-check"></i> <strong>Booked Seat:</strong> <span id="bookedSeat"></span></p>
+                            <p><i class="bi bi-currency-dollar"></i> <strong>Fare:</strong> <span id="fare"></span></p>
+                            <p><i class="bi bi-calendar2-check"></i> <strong>Transaction Date:</strong> <span id="transactionDate"></span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-download-ticket" id="downloadpdf"><i class="bi bi-download"></i> Download Ticket</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="bi bi-check-circle-fill"></i> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+
+
+</body>
+
+@section Scripts{
+
+    
+    <script>
+        $(document).ready(function () {
+            $("#downloadpdf").click(function () {
+                var sHtml = $("#downloadpdf").html();
+                sHtml = sHtml.replace(/</g, "StrTag").replace(/>/g, "EndTag");
+                window.open('../Seat/GeneratePDF?html='+sHtml,'_blank');
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
+    <script>
+        
+        function submitPassengerdetails(event) {
+            event.preventDefault(); // Prevent the default form submission
+            var passengerName = $("#passengerDetailForm input[name='passengerName']").val();
+            var mobileNo = $("#passengerDetailForm input[name='MobileNo']").val();
+            var emailID = $("#passengerDetailForm input[name='EmailID']").val();
+
+            function getQueryParam(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+
+            var routeId = getQueryParam('routeId');
+            var date = getQueryParam('onDate');
+            var sourceID = getQueryParam('sourceID');
+            var destinationID = getQueryParam('destinationID');
+            var fare = getQueryParam('fare');
+
+
+            $.ajax({
+                url: "/Seat/submitPassengerDetails",
+                type: 'POST',
+                data: {
+                    PassengerName: passengerName,
+                    MobiliNo: mobileNo,
+                    EmailID: emailID,
+                    routeId: routeId,
+                    onDate: date,
+                    sourceID: sourceID,
+                    destinationID: destinationID,
+                    fare: fare,
+                    selectedSeats: selectedSeatsData.map(seat => seat.roueSeatID).join(',')
+
+                },
+                success: function (data) {
+                    $('#message').text(data.message);
+                    $('#ticketId').text(data.ticketId);
+                    $('#psgname').text(data.psgname);
+                    $('#email').text(data.emailID);
+
+                    $('#mobileNo').text(data.mobiliNo);
+                    $('#routename').text(data.routeName);
+                    $('#departureDate').text(data.onDate);
+                    $('#bookedSeat').text(data.bookedSeat);
+                    $('#transactionDate').text(data.transactiondate);
+                    $('#fare').text(data.fare);
+
+                    $('#departureTime').text(data.departureTime);
+                    $('#arrivalTime').text(data.arrivaltime);
+                    $('#source').text(data.source);
+                    $('#destination').text(data.destination);
+
+
+
+                    $('#staticBackdrop').modal('show');
+                    $('#staticBackdrop').on('hidden.bs.modal', function (e) {
+                        // Redirect after modal is closed
+                        window.location = '/Ticket/Ticket/SearchTicket';
+                    });
+                },
+                error: function (error) {
+                    alert("Error loading passenger details form.");
+                }
+            });
+        }
+
+        var selectedSeatsData = [];
+
+        function toggleSeat(seat, isAvailable, roueSeatID) {
+            // Check if the seat is available before toggling
+            if (isAvailable > 0) {
+                $(seat).toggleClass("selected");
+
+                // Update selectedSeatsData array with RoueSeatID
+                updateSelectedSeatsData(roueSeatID, $(seat).hasClass("selected"));
+
+            }
+        }
+
+        function updateSelectedSeatsData(roueSeatID, isSelected) {
+            // Check if the seat is already in the array
+            var seatIndex = selectedSeatsData.findIndex(function (seatData) {
+                return seatData.roueSeatID === roueSeatID;
+            });
+
+            // If seat is not in the array and is selected, add it to the array
+            if (isSelected && seatIndex === -1) {
+                selectedSeatsData.push({
+                    roueSeatID: roueSeatID
+                });
+            }
+            // If seat is in the array and is not selected, remove it from the array
+            else if (!isSelected && seatIndex !== -1) {
+                selectedSeatsData.splice(seatIndex, 1);
+            }
+
+            console.log(selectedSeatsData); // You can remove or modify this line
+        }
+
+        function displayPassengerDetailsForm() {
+            var numberOfSelectedSeats = selectedSeatsData.length;
+            if (numberOfSelectedSeats > 0) {
+                // Show the passenger details form
+                $("#formdivtag").show();
+                // Load the partial view dynamically
+
+                console.log(selectedSeatsData);
+                var postData = {
+                    selectedSeats: JSON.stringify(selectedSeatsData) // Convert the array to JSON string
+                };
+
+                $.ajax({
+                    url: '/Seat/RenderPassengerDetailsForm', // Replace with your controller and action
+                    type: 'POST',
+                    data: postData,
+                    success: function (data) {
+                        $("#passengerDetailForm").html(data);
+                        $("#passengerDetailForm").append('<button type="submit" class="btn btn-primary">Submit Passenger Details</button>');
+
+                    },
+                    error: function (error) {
+                        console.error(error);
+                        alert("Error loading passenger details form.");
+                    }
+                });
+            } else {
+                $("#formdivtag").hide();
+                alert("Please select at least one seat before entering passenger details.");
+            }
+        }
+
+        function bookSeats() {
+            var selectedSeats = $(".selected");
+
+            if (selectedSeats.length === 0) {
+                alert("Please select at least one seat.");
+            } else if (selectedSeats.length > 3) {
+                alert("Maximum 3 seats allowed.");
+            } else {
+
+                var selectedSeatIDs = selectedSeats.map(function () {
+                    return $(this).find("#SeatID").text();
+                }).get();
+
+                $.ajax({
+                    url: '/Seat/UpdateSlectedSeatStatus',
+                    type: 'POST',
+                    data: { seatIDs: selectedSeatIDs },
+                    success: function (data) {
+                        displayPassengerDetailsForm();
+                    },
+                    error: function (error) {
+                        // Handle error response from the server
+                        console.log(error);
+                        alert("Error during booking.");
+                    }
+                });
+
+            }
+        }
+
+    </script>
+}
+
+
+
+
+

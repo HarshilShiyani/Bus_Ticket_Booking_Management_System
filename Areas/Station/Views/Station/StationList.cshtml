@@ -17,9 +17,13 @@
     <div class="card-header d-flex justify-content-between">
         <h3 class="text-dark">List of Station</h3>
         <div>
+            
             <a type="button" class="btn btn-success btn-add" asp-area="Station" asp-controller="Station" asp-action="StationAddEdit">Add New Station</a>
+            
         </div>
+      
     </div>
+    
     <div class="card-body">
 
         <div class="table-responsive">
@@ -68,7 +72,7 @@
         <div class="row">
             <div class="col">
                 <ul class="pagination justify-content-start">
-                    Showing @ViewBag.CurrentPage to @ViewBag.TotalPages of 10 entries
+                    Showing @ViewBag.CurrentPage of @ViewBag.TotalPages of 10 entries
                 </ul>
             </div>
             <div class="col">

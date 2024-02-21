@@ -114,18 +114,18 @@
 
                 <form method="post" id="routeStationForm">
 
-                    <div class="mb-3">
+                    <div class="mb-3" hidden>
                         <br />
                         <label class="form-label" for="RouteDetailID">RouteDetailID</label>
-                        <input type="text" class="form-control" id="RouteDetailID" name="RouteDetailID" disabled />
+                        <input type="text" class="form-control" id="RouteDetailID" name="RouteDetailID" disabled  />
                         <span class="text-danger"></span>
                         <br />
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3" hidden>
                         <br />
                         <label class="form-label" for="StationTime">RouteID</label>
-                        <input type="text" id="RouteID" name="RouteID" value="@Convert.ToInt32(Context.Request.Query["RouteID"])" disabled />
+                        <input type="text" id="RouteID" name="RouteID" value="@Convert.ToInt32(Context.Request.Query["RouteID"])" disabled  />
                         <span class="text-danger"></span>
                         <br />
 
@@ -202,8 +202,6 @@
                     method: 'GET',
                     data: { RouteID: routeID, RouteDetailID: routeDetailID },
                     success: function (data) {
-                        console.log(data);
-                        console.log(data.routeDetailID);
                         $("#RouteDetailID").val(data.routeDetailID);
 
                         $("#RouteStationId").val(data.routeStationId);

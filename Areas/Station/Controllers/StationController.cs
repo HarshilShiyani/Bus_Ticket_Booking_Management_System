@@ -19,15 +19,8 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
         {
             DAL_Station dAL_Station = new DAL_Station();
             int totalRows = dAL_Station.GetTotalRowCount();
-            int totalPages=0;
-            try
-            {
-                totalPages = (int)Math.Ceiling((double)totalRows / 10);
-            }
-            catch 
-            {
-                
-            }
+            dynamic totalPages = 0;
+            totalPages = (int)Math.Ceiling((double)totalRows / 10);
             ViewBag.TotalPages = totalPages;
             ViewBag.CurrentPage = page;
             DataTable dt = dAL_Station.PR_AllStationList(page);
@@ -81,5 +74,7 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
         }
 
         #endregion
+
+        
     }
 }

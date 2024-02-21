@@ -27,7 +27,6 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Ticket.Controllers
             List<DiaplaySerchedRouteDetail> diaplaySerchedRouteDetail = dAL_Ticket.SerchTicket(ticketSearchModel);
             return Json(JsonConvert.SerializeObject(diaplaySerchedRouteDetail));
         }
-
         #endregion
 
         #region  RenderTicketPartial
@@ -37,10 +36,5 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Ticket.Controllers
             return PartialView("_SearchedTicket", ticketModel);
         }
         #endregion
-
-        public IActionResult SeatSelection(int routeId, int seat)
-        {
-            return View("SeatSelection", seat);
-        }
     }
 }
