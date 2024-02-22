@@ -35,7 +35,7 @@ namespace Bus_Ticket_Booking_Management_System.DAL
         #region BusTypeAddEdit
         public int BusTypeAddEdit(BusTypemodel busTypemodel, int? BusTypeID)
         {
-            if (BusTypeID != 0)
+            if (BusTypeID != null)
             {
                 DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_UpadteBusType_By_BusTypeID");
                 sqlDatabase.AddInParameter(dbCommand, "@BusTypeId", DbType.Int32, BusTypeID);
@@ -152,7 +152,7 @@ namespace Bus_Ticket_Booking_Management_System.DAL
         #region BusAddEdit
         public int BusAddEdit(Busmodel busmodel, int? BusID)
         {
-            if (BusID != 0)
+            if (BusID != null)
             {
                 DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_UpdateBus_By_BusID");
                 sqlDatabase.AddInParameter(dbCommand, "@BusId", DbType.Int32, BusID);

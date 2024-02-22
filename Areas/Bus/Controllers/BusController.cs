@@ -21,7 +21,7 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Bus.Controllers
         #endregion
 
         #region BusTypeAddEdit
-        public ActionResult BusTypeAddEdit(int BusTypeID)
+        public ActionResult BusTypeAddEdit(int? BusTypeID)
         {
             DAL_Buses dAL_Buses = new DAL_Buses();
             if (BusTypeID != null)
@@ -40,18 +40,17 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Bus.Controllers
         #region BusTypeSave
         public ActionResult BusTypeSave(BusTypemodel busTypemodel, int? BusTypeID)
         {
-            if (BusTypeID != 0)
+            if (BusTypeID != null)
             {
                 dAL_Buses.BusTypeAddEdit(busTypemodel, BusTypeID);
-                ViewData["IsBusTypeAdded"] = "BusType Edited Succesfully";
-
+                TempData["IsBusTypeAdded"] = "BusType Edited Succesfully";
             }
             else
             {
                 dAL_Buses.BusTypeAddEdit(busTypemodel, BusTypeID);
-                ViewData["IsBusTypeAdded"] = "BusType Added Succesfully";
+                TempData["IsBusTypeAdded"] = "BusType Added Succesfully";
             }
-            return View("BusTypeAddEdit");
+            return RedirectToAction("BusTypeAddEdit");
         }
         #endregion
 
@@ -76,7 +75,7 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Bus.Controllers
         public IActionResult BusAddEdit(int? BusID)
         {
             ViewBag.BusTypeDDL = dAL_Buses.BusTypeDDL();
-            if (BusID != 0)
+            if (BusID != null)
             {
                 Busmodel busmodel= dAL_Buses.SelectBusByBusId(BusID);
                 return View(busmodel);
@@ -92,7 +91,7 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Bus.Controllers
         #region BusSave
         public ActionResult BusSave(Busmodel busmodel, int? BusID)
         {
-            if (BusID != 0)
+            if (BusID != null)
             {
                 dAL_Buses.BusAddEdit(busmodel, BusID);
                 TempData["IsBusAdded"] = "Bus Edited Succesfully";

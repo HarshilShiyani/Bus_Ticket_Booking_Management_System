@@ -9,7 +9,6 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Models
         public string? StationName { get; set; }
         [Required(ErrorMessage = "Please Enter Station Location")]
         public string? Location { get; set; }
-        [Required(ErrorMessage = "Please Enter Station Description")]
         public string? Description { get; set; }
     }
 

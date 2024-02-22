@@ -5,6 +5,14 @@ using Newtonsoft.Json;
 using System.Data;
 using System.Text;
 using SelectPdf;
+using Bus_Ticket_Booking_Management_System.BAL;
+using Bus_Ticket_Booking_Management_System.Models;
+using System.Net.Mail;
+using System.Net;
+using Bus_Ticket_Booking_Management_System.Areas.Routes.Models;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Bus_Ticket_Booking_Management_System.Areas.Seat.Controllers
 {
@@ -96,6 +104,68 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Seat.Controllers
                 DataTable dataTable = dAL_Ticket.PR_SelectTicketByTicketID(tempticketId);
                 DataRow row = dataTable.Rows[0];
 
+                using (MailMessage mm = new MailMessage("harshilshiyani5@gmail.com", row["EmailID"].ToString()))
+                {
+                    try
+                    {
+                        
+                        mm.Subject = "Hooray! Your tour booking is confirmed.";
+                        string htmlBody = $@"
+<div class='modal modal-lg' id='staticBackdrop' data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1' aria-labelledby='staticBackdropLabel'>
+    <div class=""modal-dialog"">
+            <div class=""modal-content"">
+                <div class=""modal-header bg-success text-light"">
+                    <h1 class=""modal-title fs-5"" id=""staticBackdropLabel""><i class=""bi bi-check-circle-fill"" id=""message""></i> </h1>
+                    <button type=""button"" class=""btn-close btn-close-white"" data-bs-dismiss=""modal"" aria-label=""Close""></button>
+                </div>
+                <div class=""modal-body"">
+                    <div class=""row"">
+                        <div class=""col-md-6"">
+                            <p><i class=""bi bi-card-text""></i> <strong>Ticket ID:</strong> <span id=""ticketId"">{row["TicketID"].ToString()}</span></p>
+                            <p><i class=""bi bi-geo-alt""></i> <strong>Route Code:</strong> <span id=""routename"">{row["RouteName"].ToString()}</span></p>
+
+                            <p><i class=""bi bi-person""></i> <strong>Passenger Name:</strong> <span id=""psgname"">{row["PassengerName"].ToString()}</span></p>
+                            <p><i class=""bi bi-envelope""></i> <strong>Email ID:</strong> <span id=""email"">{row["EmailID"].ToString()}</span></p>
+                            <p><i class=""bi bi-telephone""></i> <strong>Mobile No:</strong> <span id=""mobileNo"">{row["MobiliNo"].ToString()}</span></p>
+                            <p><i class=""bi bi-geo-alt""></i> <strong>Source:</strong> <span id=""source"">{row["Source"].ToString()}</span></p>
+                            <p><i class=""bi bi-geo-alt""></i> <strong>Destination:</strong> <span id=""destination"">{row["Destination"].ToString()}</span></p>
+                        </div>
+                        <div class=""col-md-6"">
+                            <p><i class=""bi bi-calendar3""></i> <strong>Departure Date:</strong> <span id=""departureDate"">{row["onDate"].ToString()}</span></p>
+                            <p><i class=""bi bi-clock""></i> <strong>Departure Time:</strong> <span id=""departureTime"">{row["DepartureTime"].ToString()}</span></p>
+                            <p><i class=""bi bi-clock""></i> <strong>Arrival Time:</strong> <span id=""arrivalTime"">{row["Arrivaltime"].ToString()}</span></p>
+                            <p><i class=""bi bi-patch-check""></i> <strong>Booked Seat:</strong> <span id=""bookedSeat"">{row["BookedSeat"].ToString()}</span></p>
+                            <p><i class=""bi bi-currency-dollar""></i> <strong>Fare:</strong> <span id=""fare"">{row["fare"].ToString()}</span></p>
+                            <p><i class=""bi bi-calendar2-check""></i> <strong>Transaction Date:</strong> <span id=""transactionDate"">{row["Transactiondate"].ToString()}</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class=""modal-footer"">
+                </div>
+            </div>
+        </div>
+</div>";
+                        mm.Body = htmlBody;
+                        mm.IsBodyHtml = true;
+
+                        using (SmtpClient smtp = new SmtpClient())
+                        {
+                            smtp.Host = "smtp.gmail.com";
+                            smtp.EnableSsl = true;
+                            NetworkCredential NetworkCred = new NetworkCredential("harshilshiyani5@gmail.com", "rxoqekpraeztcncr");
+                            smtp.UseDefaultCredentials = false;
+                            smtp.Credentials = NetworkCred;
+                            smtp.Port = 587;
+                            smtp.Send(mm);
+                        }
+                    }
+                    catch (SmtpException ex)
+                    {
+                        Console.WriteLine("Error sending email: " + ex.Message);
+                    }
+                }
+
+
                 // Return a success response with an appropriate message or data
                 return Json(new
                 {
@@ -105,7 +175,7 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Seat.Controllers
                     psgname = row["PassengerName"].ToString(),
                     emailID = row["EmailID"].ToString(),
                     mobiliNo = row["MobiliNo"].ToString(),
-                    routeName= row["RouteName"].ToString(),
+                    routeName = row["RouteName"].ToString(),
 
                     onDate = row["onDate"].ToString(),
                     bookedSeat = row["BookedSeat"].ToString(),

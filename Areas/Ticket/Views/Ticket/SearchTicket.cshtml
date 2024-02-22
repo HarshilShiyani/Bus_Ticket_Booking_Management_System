@@ -204,20 +204,24 @@
                             method: "GET",
                             data: { 'SourceID': formDataObject.SourceID, 'DestinationID': formDataObject.DestinationID, 'JourneyDate': formDataObject.JourneyDate },
                             success: function (data) {
-                                data = JSON.parse(data);
-                                setTimeout(function () {
+                                console.log(data.length);
+                                // Check if data is empty
+                                if (data.length === 2) {
                                     $('#loading').hide();
-
-                                    $('#ticketcard').empty();
-                                    $('#loading').hide();
-
-                                    $.each(data, function (index, ticket) {
-                                        // Load and render the partial view for a single ticket
-                                        $.get('@Url.Action("RenderTicketPartial", "Ticket", new { area = "Ticket" })', { ticket: JSON.stringify(ticket) }, function (html) {
-                                            $('#ticketcard').append(html);
+                                    $('#ticketcard').html('<div class="text-center"><h4>Not available bus in this trip.</h4></div>');
+                                } else {
+                                    data = JSON.parse(data);
+                                    setTimeout(function () {
+                                        $('#loading').hide();
+                                        $('#ticketcard').empty();
+                                        $.each(data, function (index, ticket) {
+                                            // Load and render the partial view for a single ticket
+                                            $.get('@Url.Action("RenderTicketPartial", "Ticket", new { area = "Ticket" })', { ticket: JSON.stringify(ticket) }, function (html) {
+                                                $('#ticketcard').append(html);
+                                            });
                                         });
-                                    });
-                                }, 2000);
+                                    }, 2000);
+                                }
                             },
                             error: function (error) {
                                 $('#loading').hide();

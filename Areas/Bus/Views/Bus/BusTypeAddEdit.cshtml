@@ -14,11 +14,11 @@
         </ol>
     </nav>
 </div>
-@if (ViewData["IsBusTypeAdded"] != null)
+@if (TempData["IsBusTypeAdded"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="bi bi-check-circle"></i>
-        @ViewData["IsBusTypeAdded"]
+        @TempData["IsBusTypeAdded"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }

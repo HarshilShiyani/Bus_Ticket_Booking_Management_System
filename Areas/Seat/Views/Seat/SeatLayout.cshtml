@@ -138,8 +138,20 @@
         </div>
     </div>
    
-
-
+    <div id="loadingSpinner" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="spinner-border mr-2" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mb-0">   Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 @section Scripts{
@@ -161,6 +173,8 @@
         
         function submitPassengerdetails(event) {
             event.preventDefault(); // Prevent the default form submission
+            $('#loadingSpinner').show();
+
             var passengerName = $("#passengerDetailForm input[name='passengerName']").val();
             var mobileNo = $("#passengerDetailForm input[name='MobileNo']").val();
             var emailID = $("#passengerDetailForm input[name='EmailID']").val();
@@ -210,6 +224,7 @@
                     $('#source').text(data.source);
                     $('#destination').text(data.destination);
 
+                    $('#loadingSpinner').hide();
 
 
                     $('#staticBackdrop').modal('show');
@@ -219,6 +234,8 @@
                     });
                 },
                 error: function (error) {
+                    $('#loadingSpinner').hide();
+
                     alert("Error loading passenger details form.");
                 }
             });
