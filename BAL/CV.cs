@@ -50,5 +50,25 @@ namespace Bus_Ticket_Booking_Management_System.BAL
             }
             return Role;
         }
+        public static string? ImagePath()
+        {
+            string ImagePath = "";
+            if (_contextAccessor.HttpContext.Session.GetString("ImagePath") != null)
+            {
+                ImagePath = _contextAccessor.HttpContext.Session.GetString("ImagePath").ToString();
+            }
+            return ImagePath;
+        }
+
+        public static string? MobileNo()
+        {
+            string MobileNo = "";
+            if (_contextAccessor.HttpContext.Session.GetString("MobileNo") != null)
+            {
+                MobileNo = _contextAccessor.HttpContext.Session.GetString("MobileNo").ToString();
+            }
+            return MobileNo;
+        }
+
     }
 }

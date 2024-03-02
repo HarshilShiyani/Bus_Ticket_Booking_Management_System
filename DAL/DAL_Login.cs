@@ -66,5 +66,17 @@ namespace Bus_Ticket_Booking_Management_System.DAL
             return password;
         }
 
+        public int PR_UpdateUserDetail(UserModel userModel)
+        {
+            DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_UpdateUserDetail");
+            sqlDatabase.AddInParameter(dbCommand, "@Username", DbType.String, userModel.Username);
+            sqlDatabase.AddInParameter(dbCommand, "@EmailID", DbType.String, userModel.EmailID);
+            sqlDatabase.AddInParameter(dbCommand, "@MobileNo", DbType.String, userModel.MobileNo);
+            sqlDatabase.AddInParameter(dbCommand, "@UserID", DbType.Int32, Convert.ToInt32( @CV.UserID()));
+            sqlDatabase.AddInParameter(dbCommand, "@ImagePath", DbType.String, userModel.ImagePath);
+            return sqlDatabase.ExecuteNonQuery(dbCommand);
+
+        }
+
     }
 }

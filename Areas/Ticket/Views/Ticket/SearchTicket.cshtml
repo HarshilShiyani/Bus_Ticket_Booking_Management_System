@@ -165,11 +165,21 @@
                     // Prevent the default form submission
                     event.preventDefault();
                     $('#ticketcard').on('click', '#viewSeatBtn', function () {
-                        var routeId = parseInt($('#routeid').val()); // Convert to integer
+                        var routeId = $(this).val(); // Convert to integer
+                        // alert(routeId);
                         var onDate = $('#onDate').val();
                         var sourceID = $('#SourceID').val();
                         var destinationID = $('#DestinationID').val();
                         var fare = $('#fare').text();
+                        var TripCode = $('#TripCode').text();
+
+                        var depttime = $('#depttime').text();
+                        var Origin = $('#Origin').text();
+                        var ArrivalTime = $('#ArrivalTime').text();
+                        var Destination = $('#Destination').text();
+                        var Duration = $('#Duration').text();
+
+
                         console.log(routeId);
                         console.log(onDate);
                         console.log(sourceID);
@@ -181,7 +191,15 @@
                         var encodeddestinationID = encodeParamsToBase64(destinationID);
                         var encodedonfare = encodeParamsToBase64(fare);
 
-                        window.location.href = '@Url.Action("SeatLayout", "Seat", new { area = "Seat" })' + '?routeId=' + encodedRouteId + '&onDate=' + encodedonDate + '&sourceID=' + encodedsourceID + '&destinationID=' + encodeddestinationID + '&fare=' + encodedonfare;
+                        window.location.href = '@Url.Action("SeatLayout", "Seat", new { area = "Seat" })' 
+                        + '?routeId=' + encodedRouteId + '&onDate=' + encodedonDate + '&sourceID=' + encodedsourceID + '&destinationID=' 
+                        + encodeddestinationID + '&fare=' + encodedonfare
+                            + '&TripCode=  ' + TripCode + 'depttime=' + depttime
+                            + 'Origin=' + Origin
+                            + 'ArrivalTime=' + ArrivalTime
+                            + 'Destination=' + Destination
+                            + 'Duration=' + Duration
+                            ;
                     });
 
                     // Check if the form is valid

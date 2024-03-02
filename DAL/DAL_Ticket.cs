@@ -46,6 +46,41 @@ namespace Bus_Ticket_Booking_Management_System.DAL
         }
         #endregion
 
+        public DiaplaySerchedRouteDetail SerchTicketByRouteId(TicketSearchmodel ticketSearchmodel, int routeid)
+        {
+
+            DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_Search_Route");
+            sqlDatabase.AddInParameter(dbCommand, "@SourceId", DbType.Int32, ticketSearchmodel.SourceID);
+            sqlDatabase.AddInParameter(dbCommand, "@routeid", DbType.Int32, routeid);
+
+            sqlDatabase.AddInParameter(dbCommand, "@DestinationId", DbType.Int32, ticketSearchmodel.DestinationID);
+            sqlDatabase.AddInParameter(dbCommand, "@date", DbType.Date, ticketSearchmodel.JourneyDate);
+
+            DiaplaySerchedRouteDetail temp = new DiaplaySerchedRouteDetail();
+            using (IDataReader row = sqlDatabase.ExecuteReader(dbCommand))
+            {
+                while (row.Read())
+                {
+
+                    temp.routeid = Convert.ToInt32(row["routeid"].ToString());
+                    temp.BusTypeName = row["TypeName"].ToString();
+                    temp.TripCode = row["RouteName"].ToString();
+
+                    temp.Origin = row["Source"].ToString();
+                    temp.Destination = row["Destination"].ToString();
+
+                    temp.DeptTime = row["SourceStationTime"].ToString();
+                    temp.ArrivalTime = row["DestinationStationTime"].ToString();
+                    temp.Duration = row["TimeDifferenceInHHMM"].ToString();
+                    temp.capacity = Convert.ToInt32(row["capacity"].ToString());
+                    temp.Fare = Calculatedfare(Double.Parse(row["Distance"].ToString()));
+                }
+            }
+
+            return temp;
+        }
+
+
         #region Calculatedfare
         public int Calculatedfare(double temp)
         {
@@ -65,7 +100,7 @@ namespace Bus_Ticket_Booking_Management_System.DAL
             sqlDatabase.AddInParameter(dbc, "@routeId", DbType.Int32, passengerDetails.routeId);
             sqlDatabase.AddInParameter(dbc, "@sourceID", DbType.Int32, passengerDetails.sourceID);
             sqlDatabase.AddInParameter(dbc, "@destinationID", DbType.Int32, passengerDetails.destinationID);
-            sqlDatabase.AddInParameter(dbc, "@fare", DbType.Double, passengerDetails.fare);
+            sqlDatabase.AddInParameter(dbc, "@fare", DbType.Double, Convert.ToInt32(passengerDetails.fare) * passengerDetails.selectedSeats.Split(',').Length);
             sqlDatabase.AddInParameter(dbc, "@bookedseat", DbType.String, passengerDetails.selectedSeats);
 
             return Convert.ToInt32(sqlDatabase.ExecuteScalar(dbc));
@@ -78,7 +113,7 @@ namespace Bus_Ticket_Booking_Management_System.DAL
             DataTable dataTable = new DataTable();
             using (IDataReader reader = sqlDatabase.ExecuteReader(dbc))
             {
-                 dataTable.Load(reader);
+                dataTable.Load(reader);
             }
             return dataTable;
         }

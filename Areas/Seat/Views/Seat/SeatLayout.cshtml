@@ -16,8 +16,8 @@
         }
 
         .seat {
-            width: 60px;
-            height: 60px;
+            width: 70px; /* Adjust width for chair shape */
+            height: 100px; /* Adjust height for chair shape */
             border: 2px solid #3498db;
             background-color: #e0e0e0;
             font-size: 18px;
@@ -26,7 +26,35 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            position: relative;
+            border-radius: 8px; /* Add border radius for rounded corners */
+            overflow: hidden; /* Hide overflow to prevent content from protruding */
         }
+
+            .seat::before {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 60%;
+                background-color: #e0e0e0;
+                border-top-left-radius: 50%;
+                border-top-right-radius: 50%;
+                bottom: 0;
+                left: 0;
+                transform: translateY(50%); /* Move down by half of its height */
+            }
+
+            .seat::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 10px;
+                background-color: #3498db; /* Add a different color for the seat cushion */
+                bottom: 0;
+                left: 0;
+                border-bottom-left-radius: 8px;
+                border-bottom-right-radius: 8px;
+            }
 
         .selected {
             background-color: #3498db;
@@ -49,6 +77,8 @@
     </style>
 </head>
 
+
+
 <div class="pagetitle">
     <h1>Seat</h1>
     <nav>
@@ -59,6 +89,60 @@
     </nav>
 </div>
 <body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col">
+                <div class="card">
+                    <div class="row">
+                        <div class="col text-start text-dark mb-1">
+                            <b class="bg-info p-1 rounded">@@Model.BusTypeName</b>
+                        </div>
+                        <div class="col text-end mt-1 text-dark">
+                            <b class="bg-info p-1 rounded">INR @@Model.Fare</b>
+                        </div>
+                    </div>
+
+                    <div class="container text-center">
+                        <div class="row pt-2">
+                            <div class="col">
+                                <div class="row mb-2"><b>Date</b></div>
+                                <div class="row mb-2"><h6>01-01-2024</h6></div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-2"><b>TripCode</b></div>
+                                <div class="row mb-2"><h6>@@Model.TripCode</h6></div>
+                            </div>
+                            <div class="col" hidden id="routeid">
+                                <div class="row mb-2"><b>routeid</b></div>
+                                <div class="row mb-2"><h6>@@Model.routeid</h6></div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-2"><b>Dept.Time</b></div>
+                                <div class="row mb-2"><h6>@@Model.DeptTime</h6></div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-2"><b>Origin</b></div>
+                                <div class="row mb-2"><h6>@@Model.Origin</h6></div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-2"><b>Arrival Time</b></div>
+                                <div class="row mb-2"><h6>@@Model.ArrivalTime</h6></div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-2"><b>Destination</b></div>
+                                <div class="row mb-2"><h6>@@Model.Destination</h6></div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-2"><b>Duration</b></div>
+                                <div class="row mb-2"><h6>@@Model.Duration</h6></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -108,7 +192,7 @@
                     <h1 class="modal-title fs-5" id="staticBackdropLabel"><i class="bi bi-check-circle-fill" id="message"></i> </h1>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="origatdata">
                     <div class="row">
                         <div class="col-md-6">
                             <p><i class="bi bi-card-text"></i> <strong>Ticket ID:</strong> <span id="ticketId"></span></p>
@@ -125,19 +209,19 @@
                             <p><i class="bi bi-clock"></i> <strong>Departure Time:</strong> <span id="departureTime"></span></p>
                             <p><i class="bi bi-clock"></i> <strong>Arrival Time:</strong> <span id="arrivalTime"></span></p>
                             <p><i class="bi bi-patch-check"></i> <strong>Booked Seat:</strong> <span id="bookedSeat"></span></p>
-                            <p><i class="bi bi-currency-dollar"></i> <strong>Fare:</strong> <span id="fare"></span></p>
+                            <p><i class="bi bi-currency-dollar"></i> <strong>Fare:</strong> <span id="ticketfare"></span></p>
                             <p><i class="bi bi-calendar2-check"></i> <strong>Transaction Date:</strong> <span id="transactionDate"></span></p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-download-ticket" id="downloadpdf"><i class="bi bi-download"></i> Download Ticket</button>
+                    <button type="button" class="btn btn-primary btn-download-ticket" onclick="printdata()"><i class="bi bi-download"></i> Download Ticket</button>
                     <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="bi bi-check-circle-fill"></i> Close</button>
                 </div>
             </div>
         </div>
     </div>
-   
+
     <div id="loadingSpinner" class="modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
@@ -154,23 +238,28 @@
     </div>
 </body>
 
-@section Scripts{
-
-    
-    <script>
-        $(document).ready(function () {
-            $("#downloadpdf").click(function () {
-                var sHtml = $("#downloadpdf").html();
-                sHtml = sHtml.replace(/</g, "StrTag").replace(/>/g, "EndTag");
-                window.open('../Seat/GeneratePDF?html='+sHtml,'_blank');
-            });
-        });
-    </script>
+@section Scripts{        
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 
     <script>
-        
+
+        function printdata() {
+            var printDiv = document.getElementById("origatdata");
+            var contentToPrint = printDiv.innerHTML;
+
+            var printWindow = window.open('', '', 'left=0, top=0, width=800, height=500, toolbar=0, scrollbars=0, status=0');
+            printWindow.document.write(printDiv.innerHTML);
+            contentToPrint = contentToPrint.replace('<div class="modal-footer"> < button type = "button" class= "btn btn-primary btn-download-ticket" onclick = "printdata()" > <i class="bi bi-download" > </i> Download Ticket</button ><button type="button" class= "btn btn-success" data - bs - dismiss="modal" > <i class="bi bi-check-circle-fill" > </i> Close</button ></div>', '');
+
+            var printWindow = window.open('', '', 'left=0, top=0, width=800, height=500, toolbar=0, scrollbars=0, status=0');
+            printWindow.document.write(contentToPrint);
+            printWindow.document.close();
+
+            // Focus and print the window
+            printWindow.focus();
+            printWindow.print();
+        }
         function submitPassengerdetails(event) {
             event.preventDefault(); // Prevent the default form submission
             $('#loadingSpinner').show();
@@ -207,6 +296,7 @@
 
                 },
                 success: function (data) {
+                    console.log(data.fare);
                     $('#message').text(data.message);
                     $('#ticketId').text(data.ticketId);
                     $('#psgname').text(data.psgname);
@@ -217,7 +307,7 @@
                     $('#departureDate').text(data.onDate);
                     $('#bookedSeat').text(data.bookedSeat);
                     $('#transactionDate').text(data.transactiondate);
-                    $('#fare').text(data.fare);
+                    $('#ticketfare').text(data.fare);
 
                     $('#departureTime').text(data.departureTime);
                     $('#arrivalTime').text(data.arrivaltime);

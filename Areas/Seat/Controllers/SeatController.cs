@@ -4,15 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Data;
 using System.Text;
-using SelectPdf;
-using Bus_Ticket_Booking_Management_System.BAL;
-using Bus_Ticket_Booking_Management_System.Models;
 using System.Net.Mail;
 using System.Net;
-using Bus_Ticket_Booking_Management_System.Areas.Routes.Models;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
+using Bus_Ticket_Booking_Management_System.Areas.Ticket.Models;
+using PuppeteerSharp;
 
 namespace Bus_Ticket_Booking_Management_System.Areas.Seat.Controllers
 {
@@ -24,7 +19,7 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Seat.Controllers
         [Area("Seat")]
         [Route("Seat/[controller]/[action]")]
 
-        public IActionResult SeatLayout(string routeId, string onDate)
+        public IActionResult SeatLayout(string routeId, string onDate,string Duration,string Destination,string ArrivalTime,string Origin,string depttime,string TripCode,string fare)
         {
 
             string decodedRouteId;
@@ -50,6 +45,13 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Seat.Controllers
             {
                 seatlayout = dAL_Seat.SeatLayout(int.Parse(decodedRouteId), DateTime.Parse(decodedonDate));
             }
+
+            DiaplaySerchedRouteDetail diaplaySerchedRouteDetail = new DiaplaySerchedRouteDetail();
+            diaplaySerchedRouteDetail.ArrivalTime = ArrivalTime;
+            diaplaySerchedRouteDetail.DeptTime = depttime;
+            diaplaySerchedRouteDetail.Origin=Origin;
+            diaplaySerchedRouteDetail.Destination=Destination;
+            diaplaySerchedRouteDetail.Duration=Duration;
             return View(seatlayout);
 
 
@@ -104,66 +106,66 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Seat.Controllers
                 DataTable dataTable = dAL_Ticket.PR_SelectTicketByTicketID(tempticketId);
                 DataRow row = dataTable.Rows[0];
 
-                using (MailMessage mm = new MailMessage("harshilshiyani5@gmail.com", row["EmailID"].ToString()))
-                {
-                    try
-                    {
+//                using (MailMessage mm = new MailMessage("harshilshiyani5@gmail.com", row["EmailID"].ToString()))
+//                {
+//                    try
+//                    {
                         
-                        mm.Subject = "Hooray! Your tour booking is confirmed.";
-                        string htmlBody = $@"
-<div class='modal modal-lg' id='staticBackdrop' data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1' aria-labelledby='staticBackdropLabel'>
-    <div class=""modal-dialog"">
-            <div class=""modal-content"">
-                <div class=""modal-header bg-success text-light"">
-                    <h1 class=""modal-title fs-5"" id=""staticBackdropLabel""><i class=""bi bi-check-circle-fill"" id=""message""></i> </h1>
-                    <button type=""button"" class=""btn-close btn-close-white"" data-bs-dismiss=""modal"" aria-label=""Close""></button>
-                </div>
-                <div class=""modal-body"">
-                    <div class=""row"">
-                        <div class=""col-md-6"">
-                            <p><i class=""bi bi-card-text""></i> <strong>Ticket ID:</strong> <span id=""ticketId"">{row["TicketID"].ToString()}</span></p>
-                            <p><i class=""bi bi-geo-alt""></i> <strong>Route Code:</strong> <span id=""routename"">{row["RouteName"].ToString()}</span></p>
+//                        mm.Subject = "Hooray! Your tour booking is confirmed.";
+//                        string htmlBody = $@"
+//<div class='modal modal-lg' id='staticBackdrop' data-bs-backdrop='static' data-bs-keyboard='false' tabindex='-1' aria-labelledby='staticBackdropLabel'>
+//    <div class=""modal-dialog"">
+//            <div class=""modal-content"">
+//                <div class=""modal-header bg-success text-light"">
+//                    <h1 class=""modal-title fs-5"" id=""staticBackdropLabel""><i class=""bi bi-check-circle-fill"" id=""message""></i> </h1>
+//                    <button type=""button"" class=""btn-close btn-close-white"" data-bs-dismiss=""modal"" aria-label=""Close""></button>
+//                </div>
+//                <div class=""modal-body"">
+//                    <div class=""row"">
+//                        <div class=""col-md-6"">
+//                            <p><i class=""bi bi-card-text""></i> <strong>Ticket ID:</strong> <span id=""ticketId"">{row["TicketID"].ToString()}</span></p>
+//                            <p><i class=""bi bi-geo-alt""></i> <strong>Route Code:</strong> <span id=""routename"">{row["RouteName"].ToString()}</span></p>
 
-                            <p><i class=""bi bi-person""></i> <strong>Passenger Name:</strong> <span id=""psgname"">{row["PassengerName"].ToString()}</span></p>
-                            <p><i class=""bi bi-envelope""></i> <strong>Email ID:</strong> <span id=""email"">{row["EmailID"].ToString()}</span></p>
-                            <p><i class=""bi bi-telephone""></i> <strong>Mobile No:</strong> <span id=""mobileNo"">{row["MobiliNo"].ToString()}</span></p>
-                            <p><i class=""bi bi-geo-alt""></i> <strong>Source:</strong> <span id=""source"">{row["Source"].ToString()}</span></p>
-                            <p><i class=""bi bi-geo-alt""></i> <strong>Destination:</strong> <span id=""destination"">{row["Destination"].ToString()}</span></p>
-                        </div>
-                        <div class=""col-md-6"">
-                            <p><i class=""bi bi-calendar3""></i> <strong>Departure Date:</strong> <span id=""departureDate"">{row["onDate"].ToString()}</span></p>
-                            <p><i class=""bi bi-clock""></i> <strong>Departure Time:</strong> <span id=""departureTime"">{row["DepartureTime"].ToString()}</span></p>
-                            <p><i class=""bi bi-clock""></i> <strong>Arrival Time:</strong> <span id=""arrivalTime"">{row["Arrivaltime"].ToString()}</span></p>
-                            <p><i class=""bi bi-patch-check""></i> <strong>Booked Seat:</strong> <span id=""bookedSeat"">{row["BookedSeat"].ToString()}</span></p>
-                            <p><i class=""bi bi-currency-dollar""></i> <strong>Fare:</strong> <span id=""fare"">{row["fare"].ToString()}</span></p>
-                            <p><i class=""bi bi-calendar2-check""></i> <strong>Transaction Date:</strong> <span id=""transactionDate"">{row["Transactiondate"].ToString()}</span></p>
-                        </div>
-                    </div>
-                </div>
-                <div class=""modal-footer"">
-                </div>
-            </div>
-        </div>
-</div>";
-                        mm.Body = htmlBody;
-                        mm.IsBodyHtml = true;
+//                            <p><i class=""bi bi-person""></i> <strong>Passenger Name:</strong> <span id=""psgname"">{row["PassengerName"].ToString()}</span></p>
+//                            <p><i class=""bi bi-envelope""></i> <strong>Email ID:</strong> <span id=""email"">{row["EmailID"].ToString()}</span></p>
+//                            <p><i class=""bi bi-telephone""></i> <strong>Mobile No:</strong> <span id=""mobileNo"">{row["MobiliNo"].ToString()}</span></p>
+//                            <p><i class=""bi bi-geo-alt""></i> <strong>Source:</strong> <span id=""source"">{row["Source"].ToString()}</span></p>
+//                            <p><i class=""bi bi-geo-alt""></i> <strong>Destination:</strong> <span id=""destination"">{row["Destination"].ToString()}</span></p>
+//                        </div>
+//                        <div class=""col-md-6"">
+//                            <p><i class=""bi bi-calendar3""></i> <strong>Departure Date:</strong> <span id=""departureDate"">{row["onDate"].ToString()}</span></p>
+//                            <p><i class=""bi bi-clock""></i> <strong>Departure Time:</strong> <span id=""departureTime"">{row["DepartureTime"].ToString()}</span></p>
+//                            <p><i class=""bi bi-clock""></i> <strong>Arrival Time:</strong> <span id=""arrivalTime"">{row["Arrivaltime"].ToString()}</span></p>
+//                            <p><i class=""bi bi-patch-check""></i> <strong>Booked Seat:</strong> <span id=""bookedSeat"">{row["BookedSeat"].ToString()}</span></p>
+//                            <p><i class=""bi bi-currency-dollar""></i> <strong>Fare:</strong> <span id=""fare"">{row["fare"].ToString()}</span></p>
+//                            <p><i class=""bi bi-calendar2-check""></i> <strong>Transaction Date:</strong> <span id=""transactionDate"">{row["Transactiondate"].ToString()}</span></p>
+//                        </div>
+//                    </div>
+//                </div>
+//                <div class=""modal-footer"">
+//                </div>
+//            </div>
+//        </div>
+//</div>";
+//                        mm.Body = htmlBody;
+//                        mm.IsBodyHtml = true;
 
-                        using (SmtpClient smtp = new SmtpClient())
-                        {
-                            smtp.Host = "smtp.gmail.com";
-                            smtp.EnableSsl = true;
-                            NetworkCredential NetworkCred = new NetworkCredential("harshilshiyani5@gmail.com", "rxoqekpraeztcncr");
-                            smtp.UseDefaultCredentials = false;
-                            smtp.Credentials = NetworkCred;
-                            smtp.Port = 587;
-                            smtp.Send(mm);
-                        }
-                    }
-                    catch (SmtpException ex)
-                    {
-                        Console.WriteLine("Error sending email: " + ex.Message);
-                    }
-                }
+//                        using (SmtpClient smtp = new SmtpClient())
+//                        {
+//                            smtp.Host = "smtp.gmail.com";
+//                            smtp.EnableSsl = true;
+//                            NetworkCredential NetworkCred = new NetworkCredential("harshilshiyani5@gmail.com", "rxoqekpraeztcncr");
+//                            smtp.UseDefaultCredentials = false;
+//                            smtp.Credentials = NetworkCred;
+//                            smtp.Port = 587;
+//                            smtp.Send(mm);
+//                        }
+//                    }
+//                    catch (SmtpException ex)
+//                    {
+//                        Console.WriteLine("Error sending email: " + ex.Message);
+//                    }
+//                }
 
 
                 // Return a success response with an appropriate message or data
@@ -198,19 +200,112 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Seat.Controllers
             }
         }
 
-        public IActionResult GeneratePDF(string html)
-        {
-            html = html.Replace("StrTag", "<").Replace("EndTag", ">");
-            HtmlToPdf htmlToPdf = new HtmlToPdf();
-            PdfDocument pdfDocument = htmlToPdf.ConvertHtmlString(html);
-            byte[] pdf = pdfDocument.Save();
-            pdfDocument.Close();
-            return File(
-                    pdf,
-                    "application/pdf",
-                    "dshdkshdk.pdf"
-                );
+        //public IActionResult GeneratePDF(string html)
+        //{
+        //    html = html.Replace("StrTag", "<").Replace("EndTag", ">");
+        //    HtmlToPdf htmlToPdf = new HtmlToPdf();
+        //    PdfDocument pdfDocument = htmlToPdf.ConvertHtmlString(html);
+        //    byte[] pdf = pdfDocument.Save();
+        //    pdfDocument.Close();
+        //    return File(
+        //            pdf,
+        //            "application/pdf",
+        //            "dshdkshdk.pdf"
+        //        );
 
+        //}
+
+        //public async Task<IActionResult> DownloadPdf()
+        //{
+        //    // Generate PDF using PuppeteerSharp
+        //    await DownLoadPdf();
+
+        //    // Optionally, you can return a success message or redirect the user
+        //    return Ok();
+        //}
+
+        //private async Task GeneratePdf()
+        //{
+        //    var html = System.IO.File.ReadAllText("Areas/Seat/Views/Seat/SeatLayout.cshtml");
+
+        //    var pdfOptions = new PdfOptions();
+
+        //    var browserFetcher = new BrowserFetcher();
+        //    var revisionInfo = await browserFetcher.DownloadAsync(BrowserFetcher.DefaultRevision); // Download the default revision
+
+        //    var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+        //    {
+        //        Headless = true,
+        //        ExecutablePath = revisionInfo.ExecutablePath
+        //    });
+
+        //    var page = await browser.NewPageAsync();
+        //    await page.SetContentAsync(html);
+        //    await page.PdfAsync("invoice.pdf", pdfOptions);
+
+        //    await browser.CloseAsync();
+        //}
+
+        //static async Task DownLoadPdf()
+        //{
+        //    var pdfOptions = new PuppeteerSharp.PdfOptions();
+
+        //    var html = System.IO.File.ReadAllText("~/Areas/Seat/Views/Seat/SeatLayout.cshtml");
+
+
+        //    using (var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+        //    {
+        //        Headless = true,
+        //        ExecutablePath = "CHROME_BROWSER_PATH"
+        //    }))
+        //    {
+        //        using (var page = await browser.NewPageAsync())
+        //        {
+        //            await page.SetContentAsync(html);
+        //            await page.PdfAsync("invoice.pdf", pdfOptions);
+        //        }
+        //    }
+        //}
+
+        public async Task<ActionResult> Downloadpdf()
+        {
+            
+                var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+                {
+                    Headless = true
+                });
+
+                using (var page = await browser.NewPageAsync())
+                {
+                    // Navigate to the webpage with the PDF
+                    await page.GoToAsync("https://example.com");
+
+                    // Wait for the PDF to load
+                    await page.WaitForSelectorAsync("embed[type='application/pdf']");
+
+                    // Get the URL of the PDF
+                    var pdfUrl = await page.EvaluateExpressionAsync<string>("document.querySelector('embed[type=\"application/pdf\"]').src");
+
+                    if (!string.IsNullOrEmpty(pdfUrl))
+                    {
+                        // Download the PDF
+                        var pdfData = await page.PdfDataAsync();
+
+                        // Close the browser
+                        await browser.CloseAsync();
+
+                        // Return the PDF as a file download
+                        return File(pdfData, "application/pdf", "downloaded.pdf");
+                    }
+                    //else
+                    //{
+                    //    await browser.CloseAsync();
+                    //    return HttpNotFound("PDF not found on the page.");
+                    //}
+                }
+
+            return Json(new { success = false });
+            
         }
     }
 }
