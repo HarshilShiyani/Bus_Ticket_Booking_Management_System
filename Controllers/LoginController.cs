@@ -16,7 +16,11 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
     {
         DAL_Login dAL_Login = new DAL_Login();
         DAL_User dAL_User = new DAL_User();
-
+        IWebHostEnvironment _hostingEnvironment;
+        public LoginController(IWebHostEnvironment webHostEnvironment)
+        {
+            _hostingEnvironment = webHostEnvironment;
+        }
         [IsLogged]
         #region LoginPage
         public IActionResult LoginPage()
@@ -84,7 +88,6 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
         #endregion
 
         [IsLogged]
-
         public ActionResult ForgotPasswordPage()
         {
 
@@ -145,43 +148,48 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
         [HttpPost]
         public IActionResult Update_User_Detail(UserModel userModel)
         {
-            
-                string filePath = System.IO.Path.GetFullPath(userModel.File.FileName);
-                string directoryPath = @"D:\.Net\Bus_Ticket_Booking_Management_System\wwwroot";
-                if (!Directory.Exists(directoryPath))
+            if (userModel.File != null && userModel.File.Length > 0)
+            {
+                string uploadsDirectory = Path.Combine(_hostingEnvironment.WebRootPath, "assets", "img");
+
+                if (!Directory.Exists(uploadsDirectory))
                 {
-                    //create directory at specified path
-                    Directory.CreateDirectory(directoryPath);
+                    Directory.CreateDirectory(uploadsDirectory);
                 }
-                string folderPath = Path.Combine("wwwroot/" + filePath + "/", userModel.File.FileName);
-                using (FileStream fs = System.IO.File.Create(folderPath))
+
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(userModel.File.FileName);
+                string filePath = Path.Combine(uploadsDirectory, fileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    userModel.File.CopyTo(fs);
+                    userModel.File.CopyTo(fileStream);
                 }
-                userModel.ImagePath = "/" + filePath + "/" + userModel.File.FileName;
+
+                userModel.ImagePath = "assets/img/" + fileName;
+            }
 
             int id = dAL_Login.PR_UpdateUserDetail(userModel);
-            TempData["ProfileUpdated"] = "Profile updated Succesfully";
-            HttpContext.Session.SetString("Username", userModel.Username.ToString());
-            HttpContext.Session.SetString("Role", userModel.Role.ToString());
-            if (userModel.Password != null)
-            {
-                HttpContext.Session.SetString("ImagePath", userModel.ImagePath.ToString());
 
-            }
-            if (userModel.EmailID != null)
-            {
-                HttpContext.Session.SetString("EmailID", userModel.EmailID.ToString());
+            TempData["ProfileUpdated"] = "Profile updated successfully";
+            HttpContext.Session.SetString("Username", userModel.Username);
+            //HttpContext.Session.SetString("Role", userModel.Role);
 
-            }
-            if (userModel.MobileNo != null)
+            if (!string.IsNullOrEmpty(userModel.ImagePath))
             {
-                HttpContext.Session.SetString("MobileNo", userModel.MobileNo.ToString());
-
+                HttpContext.Session.SetString("ImagePath", userModel.ImagePath);
             }
+
+            if (!string.IsNullOrEmpty(userModel.EmailID))
+            {
+                HttpContext.Session.SetString("EmailID", userModel.EmailID);
+            }
+
+            if (!string.IsNullOrEmpty(userModel.MobileNo))
+            {
+                HttpContext.Session.SetString("MobileNo", userModel.MobileNo);
+            }
+
             return RedirectToAction("Profile", "Home");
-
-
         }
     }
 

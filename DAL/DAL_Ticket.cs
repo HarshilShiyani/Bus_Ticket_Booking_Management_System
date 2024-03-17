@@ -90,7 +90,7 @@ namespace Bus_Ticket_Booking_Management_System.DAL
         }
         #endregion
 
-        public int InsertTicketDetailwithPassengerInfo(PassengerDetails passengerDetails)
+        public long InsertTicketDetailwithPassengerInfo(PassengerDetails passengerDetails)
         {
             DbCommand dbc = sqlDatabase.GetStoredProcCommand("PR_InsertTicketDetailwithPassengerInfo");
             sqlDatabase.AddInParameter(dbc, "@PassengerName", DbType.String, passengerDetails.PassengerName);
@@ -103,10 +103,10 @@ namespace Bus_Ticket_Booking_Management_System.DAL
             sqlDatabase.AddInParameter(dbc, "@fare", DbType.Double, Convert.ToInt32(passengerDetails.fare) * passengerDetails.selectedSeats.Split(',').Length);
             sqlDatabase.AddInParameter(dbc, "@bookedseat", DbType.String, passengerDetails.selectedSeats);
 
-            return Convert.ToInt32(sqlDatabase.ExecuteScalar(dbc));
+            return Convert.ToInt64(sqlDatabase.ExecuteScalar(dbc));
         }
 
-        public DataTable PR_SelectTicketByTicketID(int ticketid)
+        public DataTable PR_SelectTicketByTicketID(long ticketid)
         {
             DbCommand dbc = sqlDatabase.GetStoredProcCommand("PR_SelectTicketByTicketID");
             sqlDatabase.AddInParameter(dbc, "@ticketId", DbType.Int32, ticketid);

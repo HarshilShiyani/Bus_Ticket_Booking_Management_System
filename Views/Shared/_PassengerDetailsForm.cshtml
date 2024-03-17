@@ -1,5 +1,9 @@
 ﻿@model List<Bus_Ticket_Booking_Management_System.Areas.Seat.Models.Seatmodel>
 <div class="mt-3">
+    <h4 class="form-label">Selcted Seat: <span id="selectedSeatCount"></span>(<span id="selectedSeatIDs"></span>)</h4>
+</div>
+
+<div class="mt-3">
     <label class="form-label" for="passengerName">Passenger Name </label>
     <input type="text" class="form-control" id="passengerName" placeholder="Name" name="passengerName" required>
     <span id="passengerName" class="text-danger"></span>
@@ -13,5 +17,11 @@
     <label class="form-label">Mobile Number</label>
     <input type="text" class="form-control" name="MobileNo" required>
 </div>
+<div class="mt-3">
+    <label class="form-label">Amount</label>
+    <h3 id="fareamount"></h3>
+    <p id="actualfare" hidden></p>
+</div>
+
 
 

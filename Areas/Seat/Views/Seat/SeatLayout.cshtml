@@ -89,61 +89,61 @@
     </nav>
 </div>
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col">
-                <div class="card">
-                    <div class="row">
-                        <div class="col text-start text-dark mb-1">
-                            <b class="bg-info p-1 rounded">@@Model.BusTypeName</b>
-                        </div>
-                        <div class="col text-end mt-1 text-dark">
-                            <b class="bg-info p-1 rounded">INR @@Model.Fare</b>
-                        </div>
-                    </div>
-
-                    <div class="container text-center">
-                        <div class="row pt-2">
-                            <div class="col">
-                                <div class="row mb-2"><b>Date</b></div>
-                                <div class="row mb-2"><h6>01-01-2024</h6></div>
-                            </div>
-                            <div class="col">
-                                <div class="row mb-2"><b>TripCode</b></div>
-                                <div class="row mb-2"><h6>@@Model.TripCode</h6></div>
-                            </div>
-                            <div class="col" hidden id="routeid">
-                                <div class="row mb-2"><b>routeid</b></div>
-                                <div class="row mb-2"><h6>@@Model.routeid</h6></div>
-                            </div>
-                            <div class="col">
-                                <div class="row mb-2"><b>Dept.Time</b></div>
-                                <div class="row mb-2"><h6>@@Model.DeptTime</h6></div>
-                            </div>
-                            <div class="col">
-                                <div class="row mb-2"><b>Origin</b></div>
-                                <div class="row mb-2"><h6>@@Model.Origin</h6></div>
-                            </div>
-                            <div class="col">
-                                <div class="row mb-2"><b>Arrival Time</b></div>
-                                <div class="row mb-2"><h6>@@Model.ArrivalTime</h6></div>
-                            </div>
-                            <div class="col">
-                                <div class="row mb-2"><b>Destination</b></div>
-                                <div class="row mb-2"><h6>@@Model.Destination</h6></div>
-                            </div>
-                            <div class="col">
-                                <div class="row mb-2"><b>Duration</b></div>
-                                <div class="row mb-2"><h6>@@Model.Duration</h6></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    @*     <div class="container mt-5">
+    <div class="row justify-content-center">
+    <div class="col">
+    <div class="card">
+    <div class="row">
+    <div class="col text-start text-dark mb-1">
+    <b class="bg-info p-1 rounded">@@Model.BusTypeName</b>
+    </div>
+    <div class="col text-end mt-1 text-dark">
+    <b class="bg-info p-1 rounded">INR @@Model.Fare</b>
+    </div>
     </div>
 
-    <div class="container mt-5">
+    <div class="container text-center">
+    <div class="row pt-2">
+    <div class="col">
+    <div class="row mb-2"><b>Date</b></div>
+    <div class="row mb-2"><h6>01-01-2024</h6></div>
+    </div>
+    <div class="col">
+    <div class="row mb-2"><b>TripCode</b></div>
+    <div class="row mb-2"><h6>@@Model.TripCode</h6></div>
+    </div>
+    <div class="col" hidden id="routeid">
+    <div class="row mb-2"><b>routeid</b></div>
+    <div class="row mb-2"><h6>@@Model.routeid</h6></div>
+    </div>
+    <div class="col">
+    <div class="row mb-2"><b>Dept.Time</b></div>
+    <div class="row mb-2"><h6>@@Model.DeptTime</h6></div>
+    </div>
+    <div class="col">
+    <div class="row mb-2"><b>Origin</b></div>
+    <div class="row mb-2"><h6>@@Model.Origin</h6></div>
+    </div>
+    <div class="col">
+    <div class="row mb-2"><b>Arrival Time</b></div>
+    <div class="row mb-2"><h6>@@Model.ArrivalTime</h6></div>
+    </div>
+    <div class="col">
+    <div class="row mb-2"><b>Destination</b></div>
+    <div class="row mb-2"><h6>@@Model.Destination</h6></div>
+    </div>
+    <div class="col">
+    <div class="row mb-2"><b>Duration</b></div>
+    <div class="row mb-2"><h6>@@Model.Duration</h6></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    *@
+    <div class="container mt-5" id="seatlayout">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
@@ -175,11 +175,13 @@
         <div class="card-header d-flex justify-content-between">
             <h3 class="text-dark">Passenger Details</h3>
         </div>
-        <form id="passengerDetailForm" class="ms-3" method="POST" onsubmit="submitPassengerdetails(event)">
+        @* onsubmit="submitPassengerdetails(event)" *@
+        <form id="passengerDetailForm" class="ms-3" method="POST" asp-action="Payment" asp-controller="Payment">
             <!-- Update the ID here -->
             <div class="card-body">
                 @await Html.PartialAsync("_PassengerDetailsForm", Model)
             </div>
+
         </form>
 
     </div>
@@ -238,12 +240,36 @@
     </div>
 </body>
 
-@section Scripts{        
+@section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 
     <script>
+        // $(document).ready(function () {
+        //     $("#passengerDetailForm").submit(function (event) {
+        //         // Prevent default form submission
+        //         event.preventDefault();
+        //         var actualfare = $('#actualfare').text();
+        //         alert(actualfare);
+        //         $.ajax({
+        //             url: '@Url.Action("Payment", "Payment")', // Replace with your actual URL
+        //             type: 'POST', // or 'GET' based on your requirement
+        //             data: { fare: actualfare },
+        //             success: function (response) {
+        //                 // Handle success response here
+        //                 console.log(response);
+        //             },
+        //             error: function (xhr, status, error) {
+        //                 // Handle error response here
+        //                 console.error(xhr.responseText);
+        //             }
+        //         });
+        //     });
+        // });
 
+        function rtnfare() {
+            return $('#actualfare').text();
+        }
         function printdata() {
             var printDiv = document.getElementById("origatdata");
             var contentToPrint = printDiv.innerHTML;
@@ -260,6 +286,15 @@
             printWindow.focus();
             printWindow.print();
         }
+
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+        function decodeParamsFromBase64(encodedParams) {
+            return JSON.parse(atob(encodedParams));
+        }
+
         function submitPassengerdetails(event) {
             event.preventDefault(); // Prevent the default form submission
             $('#loadingSpinner').show();
@@ -268,24 +303,19 @@
             var mobileNo = $("#passengerDetailForm input[name='MobileNo']").val();
             var emailID = $("#passengerDetailForm input[name='EmailID']").val();
 
-            function getQueryParam(name) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(name);
-            }
-
             var routeId = getQueryParam('routeId');
             var date = getQueryParam('onDate');
             var sourceID = getQueryParam('sourceID');
             var destinationID = getQueryParam('destinationID');
             var fare = getQueryParam('fare');
 
-
+            // Call payment action method first
             $.ajax({
-                url: "/Seat/submitPassengerDetails",
+                url: "/Payment/Payment",
                 type: 'POST',
                 data: {
                     PassengerName: passengerName,
-                    MobiliNo: mobileNo,
+                    MobileNo: mobileNo,
                     EmailID: emailID,
                     routeId: routeId,
                     onDate: date,
@@ -293,40 +323,39 @@
                     destinationID: destinationID,
                     fare: fare,
                     selectedSeats: selectedSeatsData.map(seat => seat.roueSeatID).join(',')
-
                 },
-                success: function (data) {
-                    console.log(data.fare);
-                    $('#message').text(data.message);
-                    $('#ticketId').text(data.ticketId);
-                    $('#psgname').text(data.psgname);
-                    $('#email').text(data.emailID);
-
-                    $('#mobileNo').text(data.mobiliNo);
-                    $('#routename').text(data.routeName);
-                    $('#departureDate').text(data.onDate);
-                    $('#bookedSeat').text(data.bookedSeat);
-                    $('#transactionDate').text(data.transactiondate);
-                    $('#ticketfare').text(data.fare);
-
-                    $('#departureTime').text(data.departureTime);
-                    $('#arrivalTime').text(data.arrivaltime);
-                    $('#source').text(data.source);
-                    $('#destination').text(data.destination);
-
-                    $('#loadingSpinner').hide();
-
-
-                    $('#staticBackdrop').modal('show');
-                    $('#staticBackdrop').on('hidden.bs.modal', function (e) {
-                        // Redirect after modal is closed
-                        window.location = '/Ticket/Ticket/SearchTicket';
+                success: function (paymentResponse) {
+                    // Payment successful, now proceed to submit passenger details
+                    $.ajax({
+                        url: "/Seat/submitPassengerDetails",
+                        type: 'POST',
+                        data: {
+                            PassengerName: passengerName,
+                            MobileNo: mobileNo,
+                            EmailID: emailID,
+                            routeId: routeId,
+                            onDate: date,
+                            sourceID: sourceID,
+                            destinationID: destinationID,
+                            fare: fare,
+                            selectedSeats: selectedSeatsData.map(seat => seat.roueSeatID).join(',')
+                        },
+                        success: function (data) {
+                            // Handle passenger details submission success
+                            console.log(data);
+                            // Additional handling...
+                        },
+                        error: function (error) {
+                            // Handle passenger details submission error
+                            console.error("Error submitting passenger details:", error);
+                            // Additional error handling...
+                        }
                     });
                 },
-                error: function (error) {
-                    $('#loadingSpinner').hide();
-
-                    alert("Error loading passenger details form.");
+                error: function (paymentError) {
+                    // Handle payment error
+                    console.error("Error in payment:", paymentError);
+                    // Additional error handling...
                 }
             });
         }
@@ -361,17 +390,15 @@
                 selectedSeatsData.splice(seatIndex, 1);
             }
 
-            console.log(selectedSeatsData); // You can remove or modify this line
         }
 
-        function displayPassengerDetailsForm() {
+        function displayPassengerDetailsForm(a, b) {
+            var selectedSeats = $(".selected");
             var numberOfSelectedSeats = selectedSeatsData.length;
-            if (numberOfSelectedSeats > 0) {
-                // Show the passenger details form
-                $("#formdivtag").show();
-                // Load the partial view dynamically
 
-                console.log(selectedSeatsData);
+            if (numberOfSelectedSeats > 0) {
+
+                $("#formdivtag").show();
                 var postData = {
                     selectedSeats: JSON.stringify(selectedSeatsData) // Convert the array to JSON string
                 };
@@ -383,7 +410,11 @@
                     success: function (data) {
                         $("#passengerDetailForm").html(data);
                         $("#passengerDetailForm").append('<button type="submit" class="btn btn-primary">Submit Passenger Details</button>');
+                        $("#selectedSeatCount").text(a);
+                        $("#selectedSeatIDs").text(b);
+                        $("#actualfare").text(decodeParamsFromBase64(getQueryParam('fare')) * a);
 
+                        $("#fareamount").text(decodeParamsFromBase64(getQueryParam('fare')) + ' * ' + a + ' = ' + decodeParamsFromBase64(getQueryParam('fare')) * a);
                     },
                     error: function (error) {
                         console.error(error);
@@ -398,6 +429,8 @@
 
         function bookSeats() {
             var selectedSeats = $(".selected");
+            var selectedSeats = $(".selected");
+            var numberOfSelectedSeats = selectedSeatsData.length;
 
             if (selectedSeats.length === 0) {
                 alert("Please select at least one seat.");
@@ -414,7 +447,12 @@
                     type: 'POST',
                     data: { seatIDs: selectedSeatIDs },
                     success: function (data) {
-                        displayPassengerDetailsForm();
+                        $("#seatlayout").hide();
+                        var a = selectedSeatsData.length;
+                        var b = selectedSeatsData.map(seat => seat.roueSeatID).join(',');
+                        displayPassengerDetailsForm(a, b);
+
+
                     },
                     error: function (error) {
                         // Handle error response from the server
@@ -428,8 +466,3 @@
 
     </script>
 }
-
-
-
-
-

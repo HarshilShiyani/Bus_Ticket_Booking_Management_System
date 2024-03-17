@@ -164,27 +164,22 @@
 
                     // Prevent the default form submission
                     event.preventDefault();
-                    $('#ticketcard').on('click', '#viewSeatBtn', function () {
+                    $('#ticketcard').on('click', '.viewSeatBtn', function () {
+                        var parentDiv = $(this).closest('.mainparent'); // Find the parent mailticketdetailparent div
                         var routeId = $(this).val(); // Convert to integer
-                        // alert(routeId);
+
                         var onDate = $('#onDate').val();
-                        var sourceID = $('#SourceID').val();
-                        var destinationID = $('#DestinationID').val();
-                        var fare = $('#fare').text();
-                        var TripCode = $('#TripCode').text();
+                        var sourceID = parentDiv.find('.SourceID').val();
+                        var destinationID = parentDiv.find('.DestinationID').val();
+                        var fare = parentDiv.find('.fare').text();
+                        var TripCode = parentDiv.find('.TripCode').text();
 
-                        var depttime = $('#depttime').text();
-                        var Origin = $('#Origin').text();
-                        var ArrivalTime = $('#ArrivalTime').text();
-                        var Destination = $('#Destination').text();
-                        var Duration = $('#Duration').text();
+                        var depttime = parentDiv.find('.depttime').text();
+                        var Origin = parentDiv.find('.Origin').text();
+                        var ArrivalTime = parentDiv.find('.ArrivalTime').text();
+                        var Destination = parentDiv.find('.Destination').text();
+                        var Duration = parentDiv.find('.Duration').text();
 
-
-                        console.log(routeId);
-                        console.log(onDate);
-                        console.log(sourceID);
-                        console.log(destinationID);
-                        console.log(fare);
                         var encodedRouteId = encodeParamsToBase64(routeId.toString());
                         var encodedonDate = encodeParamsToBase64(onDate);
                         var encodedsourceID = encodeParamsToBase64(sourceID);
@@ -192,13 +187,13 @@
                         var encodedonfare = encodeParamsToBase64(fare);
 
                         window.location.href = '@Url.Action("SeatLayout", "Seat", new { area = "Seat" })' 
-                        + '?routeId=' + encodedRouteId + '&onDate=' + encodedonDate + '&sourceID=' + encodedsourceID + '&destinationID=' 
-                        + encodeddestinationID + '&fare=' + encodedonfare
-                            + '&TripCode=  ' + TripCode + 'depttime=' + depttime
-                            + 'Origin=' + Origin
-                            + 'ArrivalTime=' + ArrivalTime
-                            + 'Destination=' + Destination
-                            + 'Duration=' + Duration
+                         + '?routeId=' + encodedRouteId + '&onDate=' + encodedonDate + '&sourceID=' + encodedsourceID + '&destinationID=' 
+                         + encodeddestinationID + '&fare=' + encodedonfare
+                             + '&TripCode=  ' + TripCode + 'depttime=' + depttime
+                             + 'Origin=' + Origin
+                             + 'ArrivalTime=' + ArrivalTime
+                             + 'Destination=' + Destination
+                             + 'Duration=' + Duration
                             ;
                     });
 

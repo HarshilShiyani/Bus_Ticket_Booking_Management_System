@@ -1,56 +1,56 @@
 ﻿@model Bus_Ticket_Booking_Management_System.Areas.Ticket.Models.DiaplaySerchedRouteDetail
 @Html.HiddenFor(x=>x.routeid)
-<div>
-<div class="row">
-    <div class="col text-start text-dark mb-1">
-        <b class="bg-info p-1 rounded">@Model.BusTypeName</b>
+<div class="mainparent">
+    <div class="row">
+        <div class="col text-start text-dark mb-1">
+            <b class="bg-info p-1 rounded">@Model.BusTypeName</b>
+        </div>
+        <div class="col text-end mt-1 text-dark">
+            <b class="bg-info p-1 rounded">INR @Model.Fare</b>
+        </div>
     </div>
-    <div class="col text-end mt-1 text-dark">
-        <b class="bg-info p-1 rounded">INR @Model.Fare</b>
-    </div>
-</div>
-<div class="container text-center">
-    <div class="row pt-2">
-        <div class="col">
-            <div class="row mb-2"><b>TripCode</b></div>
-            <div class="row mb-2"><h6 id="TripCode">@Model.TripCode</h6></div>
-        </div>
-        <div class="col" hidden>
-            <div class="row mb-2"><b>routeid</b></div>
-            <div class="row mb-2"><h6 class="routeid">@Model.routeid</h6></div>
-        </div>
-        <div class="col">
-            <div class="row mb-2"><b>Dept.Time</b></div>
-            <div class="row mb-2"><h6 id="depttime">@Model.DeptTime</h6></div>
-        </div>
-        <div class="col">
-            <div class="row mb-2"><b>Origin</b></div>
-            <div class="row mb-2"><h6 id="Origin">@Model.Origin</h6></div>
-        </div>
-        <div class="col">
-            <div class="row mb-2"><b>Arrival Time</b></div>
-            <div class="row mb-2"><h6 id="ArrivalTime">@Model.ArrivalTime</h6></div>
-        </div>
-        <div class="col">
-            <div class="row mb-2"><b>Destination</b></div>
-            <div class="row mb-2"><h6 id="Destination">@Model.Destination</h6></div>
-        </div>
-        <div class="col">
-            <div class="row mb-2"><b>Duration</b></div>
-            <div class="row mb-2"><h6 id="Duration">@Model.Duration</h6></div>
-        </div>
-        <div class="col">
-            <div class="row mb-2"><b>Fare</b></div>
-            <div class="row"><h6>₹<span id="fare">@Model.Fare</span></h6></div>
-        </div>
-        <div class="col pt-2">
-            <div class="d-grid gap-2 d-md-block">
-                <button type="button" class="btn btn-primary btn-sm" as>@Model.capacity &raquo;</button>
+    <div class="container text-center">
+        <div class="row pt-2">
+            <div class="col">
+                <div class="row mb-2"><b>TripCode</b></div>
+                <div class="row mb-2"><h6 class="TripCode">@Model.TripCode</h6></div>
             </div>
-            <button class="bg-success" id="viewSeatBtn" value="@Model.routeid">View Seat</button>
+            <div class="col" hidden>
+                <div class="row mb-2"><b>routeid</b></div>
+                <div class="row mb-2"><h6 class="routeid">@Model.routeid</h6></div>
+            </div>
+            <div class="col">
+                <div class="row mb-2"><b>Dept.Time</b></div>
+                <div class="row mb-2"><h6 class="depttime">@Model.DeptTime</h6></div>
+            </div>
+            <div class="col">
+                <div class="row mb-2"><b>Origin</b></div>
+                <div class="row mb-2"><h6 class="Origin">@Model.Origin</h6></div>
+            </div>
+            <div class="col">
+                <div class="row mb-2"><b>Arrival Time</b></div>
+                <div class="row mb-2"><h6 class="ArrivalTime">@Model.ArrivalTime</h6></div>
+            </div>
+            <div class="col">
+                <div class="row mb-2"><b>Destination</b></div>
+                <div class="row mb-2"><h6 class="Destination">@Model.Destination</h6></div>
+            </div>
+            <div class="col">
+                <div class="row mb-2"><b>Duration</b></div>
+                <div class="row mb-2"><h6 class="Duration">@Model.Duration</h6></div>
+            </div>
+            <div class="col">
+                <div class="row mb-2"><b>Fare</b></div>
+                <div class="row"><h6>₹<span class="fare">@Model.Fare</span></h6></div>
+            </div>
+            <div class="col pt-2">
+                <div class="d-grid gap-2 d-md-block">
+                    <button type="button" class="btn btn-primary btn-sm capacity">@Model.capacity &raquo;</button>
+                </div>
+                <button class="bg-success viewSeatBtn" value="@Model.routeid">View Seat</button>
+            </div>
         </div>
     </div>
-</div>
 </div>
 <br />
 <hr />
