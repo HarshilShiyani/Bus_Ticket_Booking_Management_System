@@ -13,8 +13,6 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
         private const string _key = "rzp_test_E7IypEEeGWgb1O";
         private const string _secret = "Ol7KF98jMAw4kZUxIpyDgS8h";
 
-        
-
         public ViewResult Payment(decimal fare,PassengerDetails passengerDetails)
         {
             //string decodedfare;

@@ -141,7 +141,7 @@
                                         <img src="~/@CV.ImagePath()" alt="Profile">
 
                                         <div>
-                                            <input type="file" class="form-control" id="profileImageInput" name="File">
+                                            <input type="file" class="form-control" id="profileImageInput" name="File" accept="image/png, image/jpeg">
                                             @if (!string.IsNullOrEmpty(@CV.ImagePath()))
                                             {
                                                 <a asp-controller="Login" asp-action="User_RemoveImage" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>

@@ -216,7 +216,7 @@
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                         <li class="dropdown-header">
                             <h6>@CV.username()</h6>
-                            <span>Web Designer</span>
+                            <span>@CV.Role()</span>
                         </li>
                         <li>
                             <hr class="dropdown-divider">
@@ -253,7 +253,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                            <a class="dropdown-item d-flex align-items-center" asp-page-handler="" data-bs-toggle="modal" data-bs-target="#logoutModal">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Log Out</span>
                             </a>
