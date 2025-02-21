@@ -1,4 +1,3 @@
-using Bus_Ticket_Booking_Management_System.Payment;
 
 var builder = WebApplication.CreateBuilder(args);
 

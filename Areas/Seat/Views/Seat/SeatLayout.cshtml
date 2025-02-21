@@ -9,15 +9,15 @@
     <style>
         .seat-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
             text-align: center;
             justify-content: center;
         }
 
         .seat {
-            width: 70px; /* Adjust width for chair shape */
-            height: 100px; /* Adjust height for chair shape */
+            width: 50px; /* Adjust width for chair shape */
+            height: 70px; /* Adjust height for chair shape */
             border: 2px solid #3498db;
             background-color: #e0e0e0;
             font-size: 18px;
@@ -30,6 +30,18 @@
             border-radius: 8px; /* Add border radius for rounded corners */
             overflow: hidden; /* Hide overflow to prevent content from protruding */
         }
+
+            seat:nth-child(1), .seat:nth-child(2) {
+                margin-right: 5px; /* Little space between first two seats */
+            }
+
+            .seat:nth-child(2), .seat:nth-child(3) {
+                margin-right: 150px; /* More space between second and third seats */
+            }
+
+            .seat:nth-child(3), .seat:nth-child(4) {
+                margin-right: 5px; /* Little space between third and fourth seats */
+            }
 
             .seat::before {
                 content: '';
@@ -74,6 +86,15 @@
         input[type="text"], input[type="number"], input[type="email"] {
             width: 50%;
         }
+
+        .starting-photo {
+            text-align: right;
+        }
+
+            .starting-photo img {
+                max-width: 100px; /* Adjust as needed */
+                height: auto;
+            }
     </style>
 </head>
 
@@ -89,66 +110,16 @@
     </nav>
 </div>
 <body>
-    @*     <div class="container mt-5">
-    <div class="row justify-content-center">
-    <div class="col">
-    <div class="card">
-    <div class="row">
-    <div class="col text-start text-dark mb-1">
-    <b class="bg-info p-1 rounded">@@Model.BusTypeName</b>
-    </div>
-    <div class="col text-end mt-1 text-dark">
-    <b class="bg-info p-1 rounded">INR @@Model.Fare</b>
-    </div>
-    </div>
-
-    <div class="container text-center">
-    <div class="row pt-2">
-    <div class="col">
-    <div class="row mb-2"><b>Date</b></div>
-    <div class="row mb-2"><h6>01-01-2024</h6></div>
-    </div>
-    <div class="col">
-    <div class="row mb-2"><b>TripCode</b></div>
-    <div class="row mb-2"><h6>@@Model.TripCode</h6></div>
-    </div>
-    <div class="col" hidden id="routeid">
-    <div class="row mb-2"><b>routeid</b></div>
-    <div class="row mb-2"><h6>@@Model.routeid</h6></div>
-    </div>
-    <div class="col">
-    <div class="row mb-2"><b>Dept.Time</b></div>
-    <div class="row mb-2"><h6>@@Model.DeptTime</h6></div>
-    </div>
-    <div class="col">
-    <div class="row mb-2"><b>Origin</b></div>
-    <div class="row mb-2"><h6>@@Model.Origin</h6></div>
-    </div>
-    <div class="col">
-    <div class="row mb-2"><b>Arrival Time</b></div>
-    <div class="row mb-2"><h6>@@Model.ArrivalTime</h6></div>
-    </div>
-    <div class="col">
-    <div class="row mb-2"><b>Destination</b></div>
-    <div class="row mb-2"><h6>@@Model.Destination</h6></div>
-    </div>
-    <div class="col">
-    <div class="row mb-2"><b>Duration</b></div>
-    <div class="row mb-2"><h6>@@Model.Duration</h6></div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    *@
     <div class="container mt-5" id="seatlayout">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title text-center">Bus Seat Selection</h5>
+                        <div class="starting-photo">
+                            <h5 class="card-title text-center">Bus Seat Selection</h5>
+
+                            <img src="~/assets/img/steeringwheel.jpg" alt="Starting Photo" class="img-fluid">
+                        </div>
                     </div>
                     <div class="card-body">
                         <div id="seat-map" class="seat-container">
@@ -162,6 +133,7 @@
                                 </div>
                             }
                         </div>
+
                     </div>
                     <div class="card-footer text-muted">
                         <button id="bookButton" class="btn btn-primary" onclick="bookSeats()">Book Selected Seats</button>
@@ -175,15 +147,12 @@
         <div class="card-header d-flex justify-content-between">
             <h3 class="text-dark">Passenger Details</h3>
         </div>
-        @* onsubmit="submitPassengerdetails(event)" *@
-        <form id="passengerDetailForm" class="ms-3" method="POST" asp-action="Payment" asp-controller="Payment">
+        <form id="passengerDetailForm" class="ms-3" method="POST" onsubmit="submitPassengerdetails(event)">
             <!-- Update the ID here -->
             <div class="card-body">
                 @await Html.PartialAsync("_PassengerDetailsForm", Model)
             </div>
-
         </form>
-
     </div>
 
     <!-- Modal -->
@@ -192,7 +161,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-success text-light">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel"><i class="bi bi-check-circle-fill" id="message"></i> </h1>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="origatdata">
                     <div class="row">
@@ -215,14 +184,17 @@
                             <p><i class="bi bi-calendar2-check"></i> <strong>Transaction Date:</strong> <span id="transactionDate"></span></p>
                         </div>
                     </div>
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary btn-download-ticket" onclick="printdata()"><i class="bi bi-download"></i> Download Ticket</button>
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal"><i class="bi bi-check-circle-fill"></i> Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+
+
 
     <div id="loadingSpinner" class="modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -240,33 +212,8 @@
     </div>
 </body>
 
-@section Scripts{
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
-
+@section Scripts {
     <script>
-        // $(document).ready(function () {
-        //     $("#passengerDetailForm").submit(function (event) {
-        //         // Prevent default form submission
-        //         event.preventDefault();
-        //         var actualfare = $('#actualfare').text();
-        //         alert(actualfare);
-        //         $.ajax({
-        //             url: '@Url.Action("Payment", "Payment")', // Replace with your actual URL
-        //             type: 'POST', // or 'GET' based on your requirement
-        //             data: { fare: actualfare },
-        //             success: function (response) {
-        //                 // Handle success response here
-        //                 console.log(response);
-        //             },
-        //             error: function (xhr, status, error) {
-        //                 // Handle error response here
-        //                 console.error(xhr.responseText);
-        //             }
-        //         });
-        //     });
-        // });
-
         function rtnfare() {
             return $('#actualfare').text();
         }
@@ -296,7 +243,7 @@
         }
 
         function submitPassengerdetails(event) {
-            event.preventDefault(); // Prevent the default form submission
+            event.preventDefault();
             $('#loadingSpinner').show();
 
             var passengerName = $("#passengerDetailForm input[name='passengerName']").val();
@@ -309,13 +256,12 @@
             var destinationID = getQueryParam('destinationID');
             var fare = getQueryParam('fare');
 
-            // Call payment action method first
             $.ajax({
-                url: "/Payment/Payment",
+                url: "/Seat/submitPassengerDetails",
                 type: 'POST',
                 data: {
                     PassengerName: passengerName,
-                    MobileNo: mobileNo,
+                    MobiliNo: mobileNo,
                     EmailID: emailID,
                     routeId: routeId,
                     onDate: date,
@@ -324,38 +270,37 @@
                     fare: fare,
                     selectedSeats: selectedSeatsData.map(seat => seat.roueSeatID).join(',')
                 },
-                success: function (paymentResponse) {
-                    // Payment successful, now proceed to submit passenger details
-                    $.ajax({
-                        url: "/Seat/submitPassengerDetails",
-                        type: 'POST',
-                        data: {
-                            PassengerName: passengerName,
-                            MobileNo: mobileNo,
-                            EmailID: emailID,
-                            routeId: routeId,
-                            onDate: date,
-                            sourceID: sourceID,
-                            destinationID: destinationID,
-                            fare: fare,
-                            selectedSeats: selectedSeatsData.map(seat => seat.roueSeatID).join(',')
-                        },
-                        success: function (data) {
-                            // Handle passenger details submission success
-                            console.log(data);
-                            // Additional handling...
-                        },
-                        error: function (error) {
-                            // Handle passenger details submission error
-                            console.error("Error submitting passenger details:", error);
-                            // Additional error handling...
-                        }
+                success: function (data) {
+                    // Update modal content with received data
+                    $('#message').text(data.message);
+                    $('#ticketId').text(data.ticketId);
+                    $('#routename').text(data.routeName);
+                    $('#psgname').text(data.psgname);
+                    $('#email').text(data.emailID);
+                    $('#mobileNo').text(data.mobiliNo);
+                    $('#source').text(data.source);
+                    $('#destination').text(data.destination);
+                    $('#departureDate').text(data.onDate);
+                    $('#departureTime').text(data.departureTime);
+                    $('#arrivalTime').text(data.arrivaltime);
+                    $('#bookedSeat').text(data.bookedSeat);
+                    $('#ticketfare').text(data.fare);
+                    $('#transactionDate').text(data.transactiondate);
+
+                    // Hide the loading spinner
+                    $('#loadingSpinner').hide();
+
+                    // Show the modal
+                    $('#staticBackdrop').modal('show');
+
+                    $('.modal-header .btn-close, .modal-footer .btn-secondary').click(function () {
+                        $('#staticBackdrop').modal('hide');
+                        window.location.href = '/Ticket/Ticket/SearchTicket';
                     });
+                    
                 },
-                error: function (paymentError) {
-                    // Handle payment error
-                    console.error("Error in payment:", paymentError);
-                    // Additional error handling...
+                error: function (error) {
+                    console.error("Error submitting passenger details:", error);
                 }
             });
         }

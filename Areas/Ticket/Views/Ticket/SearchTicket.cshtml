@@ -169,8 +169,9 @@
                         var routeId = $(this).val(); // Convert to integer
 
                         var onDate = $('#onDate').val();
-                        var sourceID = parentDiv.find('.SourceID').val();
-                        var destinationID = parentDiv.find('.DestinationID').val();
+                        var sourceID = $('#SourceID').val();
+                        var destinationID = $('#DestinationID').val();
+
                         var fare = parentDiv.find('.fare').text();
                         var TripCode = parentDiv.find('.TripCode').text();
 
@@ -183,17 +184,18 @@
                         var encodedRouteId = encodeParamsToBase64(routeId.toString());
                         var encodedonDate = encodeParamsToBase64(onDate);
                         var encodedsourceID = encodeParamsToBase64(sourceID);
+
                         var encodeddestinationID = encodeParamsToBase64(destinationID);
                         var encodedonfare = encodeParamsToBase64(fare);
 
-                        window.location.href = '@Url.Action("SeatLayout", "Seat", new { area = "Seat" })' 
-                         + '?routeId=' + encodedRouteId + '&onDate=' + encodedonDate + '&sourceID=' + encodedsourceID + '&destinationID=' 
-                         + encodeddestinationID + '&fare=' + encodedonfare
-                             + '&TripCode=  ' + TripCode + 'depttime=' + depttime
-                             + 'Origin=' + Origin
-                             + 'ArrivalTime=' + ArrivalTime
-                             + 'Destination=' + Destination
-                             + 'Duration=' + Duration
+                        window.location.href = '@Url.Action("SeatLayout", "Seat", new { area = "Seat" })'
+                            + '?routeId=' + encodedRouteId + '&onDate=' + encodedonDate + '&sourceID=' + encodedsourceID + '&destinationID='
+                            + encodeddestinationID + '&fare=' + encodedonfare
+                            + '&TripCode=  ' + TripCode + 'depttime=' + depttime
+                            + 'Origin=' + Origin
+                            + 'ArrivalTime=' + ArrivalTime
+                            + 'Destination=' + Destination
+                            + 'Duration=' + Duration
                             ;
                     });
 

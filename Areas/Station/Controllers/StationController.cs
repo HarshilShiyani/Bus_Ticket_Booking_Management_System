@@ -59,18 +59,26 @@ namespace Bus_Ticket_Booking_Management_System.Areas.Station.Controllers
         #region StationSave
         public ActionResult StationSave(Stationmodel stationmodel, int? StationID)
         {
-            if (StationID != null)
+            if (ModelState.IsValid)
             {
-                station.StationAddEdit(stationmodel, StationID);
-                ViewData["IsStationAdded"] = "Station Edited Succesfully";
+                if (StationID != null)
+                {
+                    station.StationAddEdit(stationmodel, StationID);
+                    ViewData["IsStationAdded"] = "Station Edited Succesfully";
 
+                }
+                else
+                {
+                    station.StationAddEdit(stationmodel, StationID);
+                    ViewData["IsStationAdded"] = "Station Added Succesfully";
+                }
+                return View("StationAddEdit");
             }
-            else
+            else    
             {
-                station.StationAddEdit(stationmodel, StationID);
-                ViewData["IsStationAdded"] = "Station Added Succesfully";
+                return View("StationAddEdit",stationmodel);
             }
-            return View("StationAddEdit");
+            
         }
 
         #endregion

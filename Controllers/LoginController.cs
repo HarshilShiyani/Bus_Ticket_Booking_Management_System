@@ -112,7 +112,7 @@ namespace Bus_Ticket_Booking_Management_System.Controllers
                             {
                                 smtp.Host = "smtp.gmail.com";
                                 smtp.EnableSsl = true;
-                                NetworkCredential NetworkCred = new NetworkCredential("harshilshiyani5@gmail.com", "rxoqekpraeztcncr");
+                                NetworkCredential NetworkCred = new NetworkCredential("------------@gmail.com", "----------");
                                 smtp.UseDefaultCredentials = false;
                                 smtp.Credentials = NetworkCred;
                                 smtp.Port = 587;
